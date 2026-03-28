@@ -194,7 +194,6 @@
 
     <div id="homePage" class="container">
         <div id="notifBanner" onclick="window.requestNotifPermission()">🔔 คลิกที่นี่เพื่อเปิดการแจ้งเตือนบนมือถือ</div>
-        
         <h2>จองคิวใช้อุปกรณ์ 🎨</h2>
         <p style="text-align: center; color: #588157; margin-bottom: 1rem;">ยินดีต้อนรับคุณ: <span id="displayUserName"></span></p>
         <form id="bookingForm">
@@ -234,9 +233,9 @@
         let currentUser = null; 
         window.equipmentList = []; 
         window.currentEqRemaining = null; 
-        let unsubscribeBookings = null;
+        let unsubscribeBookings = null; // ตัวแปรสำหรับแจ้งเตือน
 
-        // --- Notification Logic ---
+        // --- ระบบแจ้งเตือน (Notification Logic) ---
         window.requestNotifPermission = function() {
             if (!("Notification" in window)) {
                 alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือนหน้าจอ");
@@ -245,7 +244,7 @@
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
                     document.getElementById('notifBanner').style.display = 'none';
-                    new Notification("สำเร็จ!", { body: "เปิดแจ้งเตือนแล้ว! คุณจะทราบสถานะได้ทันที", icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
+                    new Notification("สำเร็จ!", { body: "คุณได้เปิดการแจ้งเตือนสถานะแล้ว 🎉", icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
                 }
             });
         };
@@ -258,14 +257,12 @@
             }
         }
 
-        // --- Register Service Worker ---
+        // ลงทะเบียน Service Worker เพื่อให้เด้งมุมจอ
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js');
-            });
+            window.addEventListener('load', () => { navigator.serviceWorker.register('service-worker.js'); });
         }
 
-        // --- Login & State Persistance ---
+        // --- ระบบจำการล็อกอิน ---
         window.onload = async function() {
             const savedUser = localStorage.getItem('currentUser');
             const savedAdmin = localStorage.getItem('adminLoggedIn');
@@ -370,7 +367,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 document.getElementById('displayUserName').innerText = currentUser.name;
                 window.showPage('homePage'); loadEquipmentData(); loadUserBookings();
-            } else { alert("ชื่อผู้ใช้หรือรหัสผ่านผิด"); }
+            } else { alert("รหัสผ่านผิด"); }
         }
 
         window.submitBooking = async function() {
@@ -406,11 +403,12 @@
                 });
                 document.getElementById('bookingForm').style.display = active ? 'none' : 'block';
                 
+                // แจ้งเตือน SMS Style เมื่อแอดมินยืนยัน
                 snap.docChanges().forEach(change => {
                     if (change.type === "modified") {
                         const data = change.doc.data();
                         if (data.status === 'ยืนยันแล้ว') {
-                            showBrowserNotification('คิวจองได้รับการยืนยัน! ✅', `รายการ ${data.equipment} พร้อมใช้งานแล้วครับ`);
+                            showBrowserNotification('คิวจองได้รับการยืนยัน! ✅', `รายการ ${data.equipment} ของคุณได้รับการอนุมัติแล้วครับ`);
                             window.showModal('ยืนยันแล้ว!', `รายการ ${data.equipment} ได้รับการอนุมัติแล้ว`, 'success');
                         }
                     }
