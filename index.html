@@ -110,6 +110,19 @@
         .modal-btn-cancel:hover { background-color: #ccc; }
         #modalInput { margin-top: 1rem; display: none; }
         
+        /* Success Animation */
+        @keyframes popScale {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            animation: popScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
         /* Layout for setting form */
         .setting-flex { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 0.5rem; }
         .setting-flex input { width: 100px; margin: 0; }
@@ -135,6 +148,7 @@
 
     <div id="customModal" class="modal-overlay">
         <div class="modal-content">
+            <div id="modalIconContainer" style="display: none;"></div>
             <h3 id="modalTitle" style="margin-top:0;">แจ้งเตือน</h3>
             <p id="modalText"></p>
             <input type="text" id="modalInput">
@@ -175,8 +189,8 @@
                 <input type="text" id="eqName" placeholder="เช่น ชุดสีน้ำ">
             </div>
             <div class="form-group">
-                <label>จำนวนคงเหลือ (สต๊อกปัจจุบัน)</label>
-                <input type="number" id="eqQuantity" min="0" placeholder="เช่น 5">
+                <label>จำนวนทั้งหมด (ชิ้น/ชุด)</label>
+                <input type="number" id="eqQuantity" min="1" placeholder="เช่น 5">
             </div>
             <div class="modal-buttons">
                 <button onclick="window.saveEquipment()">บันทึก</button>
@@ -460,12 +474,13 @@
                     <tr>
                         <th>ลำดับ</th>
                         <th>ชื่ออุปกรณ์</th>
-                        <th>จำนวนคงเหลือ (ชิ้น/ชุด)</th>
+                        <th>จำนวนทั้งหมด (ชิ้น/ชุด)</th>
+                        <th>คงเหลือวันนี้</th>
                         <th style="width: 150px;">จัดการ</th>
                     </tr>
                 </thead>
                 <tbody id="equipmentTableBody">
-                    <tr><td colspan="4" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
+                    <tr><td colspan="5" style="text-align: center;">กำลังโหลดข้อมูล...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -522,6 +537,27 @@
         window.equipmentList = []; 
         window.currentEqRemaining = null; 
 
+        // --- ระบบเช็ค Local Storage ตอนโหลดหน้าเว็บ (ให้จำการล็อกอิน) ---
+        window.onload = async function() {
+            const savedUser = localStorage.getItem('currentUser');
+            const savedAdmin = localStorage.getItem('adminLoggedIn');
+
+            if (savedAdmin === 'true') {
+                window.showPage('adminPage');
+                loadAdminData(); loadUsersData(); loadEquipmentData(); loadSystemSettings();
+            } else if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                const displayName = (currentUser.firstName && currentUser.lastName) ? 
+                    `${currentUser.firstName} ${currentUser.lastName}` : currentUser.name;
+                    
+                document.getElementById('displayUserName').innerText = displayName;
+                window.updateAvailableTimes(); 
+                window.showPage('homePage'); 
+                await loadEquipmentData(); 
+                loadUserBookings(); 
+            }
+        };
+
         // --- ตั้งค่าปฏิทิน และจัดการการป้องกันไม่ให้กดเวลาอดีต ---
         const bookDateInput = document.getElementById("bookDate");
         const bookTimeSelect = document.getElementById("bookTime");
@@ -568,7 +604,7 @@
 
             const eq = window.equipmentList.find(e => e.name === eqName);
             if(eq) {
-                const remaining = parseInt(eq.quantity || 0); // ดึงค่าคงเหลือจาก DB ตรงๆ (หลังหักสต๊อกแล้ว)
+                const remaining = parseInt(eq.quantity || 0); 
                 window.currentEqRemaining = remaining;
                 
                 if (remaining > 0) {
@@ -584,7 +620,7 @@
             }
         }
 
-        // --- ระบบ Popup Modal ทั่วไป ---
+        // --- ระบบ Popup Modal ทั่วไป พร้อมรองรับ Success Animation ---
         let modalCallback = null;
         window.showModal = function(title, text, type = 'alert', callback = null, defaultInput = '') {
             document.getElementById('modalTitle').innerText = title;
@@ -594,8 +630,18 @@
 
             const input = document.getElementById('modalInput');
             const btnCancel = document.getElementById('modalBtnCancel');
+            const iconContainer = document.getElementById('modalIconContainer');
 
-            if (type === 'prompt') {
+            // Reset icon
+            iconContainer.style.display = 'none';
+            iconContainer.innerHTML = '';
+
+            if (type === 'success') {
+                iconContainer.style.display = 'block';
+                iconContainer.innerHTML = '<span class="success-icon">✅</span>';
+                input.style.display = 'none';
+                btnCancel.style.display = 'none';
+            } else if (type === 'prompt') {
                 input.style.display = 'block';
                 input.value = defaultInput;
                 btnCancel.style.display = 'block';
@@ -622,35 +668,52 @@
             document.getElementById(pageId).classList.add('active-page');
         }
 
-        // --- โหลดข้อมูลอุปกรณ์ (ใช้ Quantity เป็นยอดคงเหลือ) ---
+        // --- โหลดข้อมูลอุปกรณ์ (พร้อมคำนวณคงเหลือวันนี้) ---
         async function loadEquipmentData() {
             const eqSelect = document.getElementById('equipment');
             const adminEqTable = document.getElementById('equipmentTableBody');
             
             try {
+                // คำนวณยอดคงเหลือของวันนี้สำหรับหน้า Admin
+                const now = new Date();
+                const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                const qBookings = query(bookingsCollection, where("date", "==", todayStr));
+                const snapBookings = await getDocs(qBookings);
+                
+                let bookedTodayMap = {};
+                snapBookings.forEach(d => {
+                    const data = d.data();
+                    if (data.status === 'รออนุมัติ' || data.status === 'ยืนยันแล้ว' || data.status === 'รอคืนของ') {
+                        bookedTodayMap[data.equipment] = (bookedTodayMap[data.equipment] || 0) + parseInt(data.quantity || 1);
+                    }
+                });
+
                 const qSnap = await getDocs(equipmentCollection);
                 eqSelect.innerHTML = '<option value="" disabled selected>เลือกอุปกรณ์...</option>';
                 adminEqTable.innerHTML = '';
                 window.equipmentList = [];
                 
                 if(qSnap.empty) {
-                    adminEqTable.innerHTML = '<tr><td colspan="4" style="text-align: center; color:#999;">ยังไม่มีข้อมูลอุปกรณ์ (กรุณาเพิ่ม)</td></tr>';
+                    adminEqTable.innerHTML = '<tr><td colspan="5" style="text-align: center; color:#999;">ยังไม่มีข้อมูลอุปกรณ์ (กรุณาเพิ่ม)</td></tr>';
                 } else {
                     let eqIndex = 1;
                     qSnap.forEach(docSnap => {
                         const data = docSnap.data();
                         window.equipmentList.push({ id: docSnap.id, ...data });
                         
-                        let remaining = parseInt(data.quantity || 0);
+                        let totalQty = parseInt(data.quantity || 1);
+                        let bookedQty = bookedTodayMap[data.name] || 0;
+                        let remaining = totalQty - bookedQty;
                         let remainingColor = remaining > 0 ? '#2b8a3e' : '#c92a2a';
 
                         eqSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
                         adminEqTable.innerHTML += `<tr>
                             <td>${eqIndex++}</td>
                             <td>${data.name}</td>
+                            <td>${totalQty}</td>
                             <td style="color: ${remainingColor}; font-weight: 500;">${remaining}</td>
                             <td>
-                                <button class="action-btn btn-edit-user" onclick="window.openEquipmentModal('${docSnap.id}', '${data.name}', '${remaining}')">แก้ไข</button>
+                                <button class="action-btn btn-edit-user" onclick="window.openEquipmentModal('${docSnap.id}', '${data.name}', '${totalQty}')">แก้ไข</button>
                                 <button class="action-btn btn-delete" onclick="window.deleteEquipment('${docSnap.id}')">ลบ</button>
                             </td>
                         </tr>`;
@@ -700,7 +763,7 @@
                     username: username, password: password, faculty: faculty, major: major, year: year
                 });
 
-                window.showModal('สำเร็จ', 'สมัครสมาชิกเรียบร้อยแล้ว กรุณาเข้าสู่ระบบ', 'alert', () => {
+                window.showModal('สำเร็จ', 'สมัครสมาชิกเรียบร้อยแล้ว\nกรุณาเข้าสู่ระบบ', 'success', () => {
                     document.getElementById('regFirstName').value = ''; document.getElementById('regLastName').value = ''; 
                     document.getElementById('regUsername').value = ''; document.getElementById('regPassword').value = ''; 
                     document.getElementById('regFaculty').value = ''; document.getElementById('regMajor').value = ''; 
@@ -729,6 +792,10 @@
                     window.showModal('เข้าสู่ระบบล้มเหลว', 'รหัสนักศึกษาหรือรหัสผ่านไม่ถูกต้อง', 'alert');
                 } else {
                     querySnapshot.forEach((doc) => { currentUser = { id: doc.id, ...doc.data() }; });
+                    
+                    // เซฟลง Local Storage
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
                     const displayName = (currentUser.firstName && currentUser.lastName) ? 
                         `${currentUser.firstName} ${currentUser.lastName}` : currentUser.name;
                         
@@ -748,6 +815,9 @@
             window.showModal('ระบบแอดมิน', 'กรุณากรอกรหัสผ่านสำหรับ Admin:\n(รหัสผ่านทดสอบคือ: 1234)', 'prompt', (isConfirm, val) => {
                 if (isConfirm) {
                     if (val === "1234") {
+                        // เซฟสถานะแอดมินลง Local Storage
+                        localStorage.setItem('adminLoggedIn', 'true');
+                        
                         window.showPage('adminPage');
                         loadAdminData(); loadUsersData(); loadEquipmentData(); loadSystemSettings();
                     } else {
@@ -757,8 +827,11 @@
             });
         }
 
+        // --- ออกจากระบบ (ล้าง Local Storage) ---
         window.logout = function() { 
             currentUser = null;
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('adminLoggedIn');
             document.getElementById('loginUsername').value = '';
             document.getElementById('loginPassword').value = '';
             window.showPage('loginPage'); 
@@ -820,7 +893,7 @@
                     status: 'รออนุมัติ', createdAt: new Date()
                 });
 
-                window.showModal('สำเร็จ', `ส่งคำขอจองสำเร็จ!\nโปรดรอ Admin อนุมัติคิวของคุณ`, 'alert', () => {
+                window.showModal('จองคิวสำเร็จ!', `ส่งคำขอจองเรียบร้อยแล้ว\nโปรดรอ Admin อนุมัติคิวของคุณนะครับ 🎨`, 'success', () => {
                     document.getElementById('bookingForm').reset();
                     document.getElementById('eqRemainingLabel').innerText = '';
                     loadUserBookings(); 
@@ -911,7 +984,7 @@
                     try {
                         const docRef = doc(db, "bookings", docId);
                         await updateDoc(docRef, { status: "รอคืนของ" });
-                        window.showModal('สำเร็จ', 'ส่งคำขอคืนของแล้ว รอแอดมินตรวจสอบครับ', 'alert', () => { loadUserBookings(); });
+                        window.showModal('สำเร็จ', 'ส่งคำขอคืนของแล้ว รอแอดมินตรวจสอบครับ', 'success', () => { loadUserBookings(); });
                     } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาดในการส่งคืน', 'alert'); }
                 }
             });
@@ -988,7 +1061,6 @@
             const newStatus = document.getElementById('newStatusSelect').value;
             
             try {
-                // ดึงข้อมูลการจองปัจจุบันมาดูก่อน
                 const bookingRef = doc(db, "bookings", docId);
                 const bookingSnap = await getDoc(bookingRef);
                 if (!bookingSnap.exists()) return;
@@ -998,19 +1070,17 @@
                 const eqName = bData.equipment;
                 const qty = parseInt(bData.quantity || 1);
 
-                // เช็คว่าสถานะใดถือเป็นการ "นำของออกจากคลัง"
                 const isDeductedStatus = (s) => s === 'ยืนยันแล้ว' || s === 'รอคืนของ';
                 const wasDeducted = isDeductedStatus(oldStatus);
                 const willBeDeducted = isDeductedStatus(newStatus);
 
                 let stockChange = 0;
                 if (!wasDeducted && willBeDeducted) {
-                    stockChange = -qty; // ต้องตัดสต๊อก
+                    stockChange = -qty; 
                 } else if (wasDeducted && !willBeDeducted) {
-                    stockChange = qty; // คืนของกลับเข้าสต๊อก
+                    stockChange = qty; 
                 }
 
-                // ดำเนินการตัด/คืนสต๊อกในฐานข้อมูลอุปกรณ์
                 if (stockChange !== 0) {
                     const eqQ = query(equipmentCollection, where("name", "==", eqName));
                     const eqSnap = await getDocs(eqQ);
@@ -1019,7 +1089,6 @@
                         const eqDoc = eqSnap.docs[0];
                         const currentQty = parseInt(eqDoc.data().quantity || 0);
                         
-                        // ป้องกันสต๊อกติดลบตอนกดอนุมัติ
                         if (stockChange < 0 && currentQty + stockChange < 0) {
                             window.showModal('สต๊อกไม่พอ', `ไม่สามารถยืนยันการจองนี้ได้ เนื่องจากอุปกรณ์คงเหลือเพียง ${currentQty} ชิ้น`, 'alert');
                             document.getElementById('statusModal').style.display = 'none';
@@ -1032,13 +1101,12 @@
                     }
                 }
 
-                // อัปเดตสถานะการจอง
                 await updateDoc(bookingRef, { status: newStatus });
                 document.getElementById('statusModal').style.display = 'none';
                 
-                window.showModal('สำเร็จ', 'อัปเดตสถานะและสต๊อกสำเร็จ', 'alert', () => { 
+                window.showModal('สำเร็จ', 'อัปเดตสถานะและสต๊อกสำเร็จ', 'success', () => { 
                     loadAdminData(); 
-                    loadEquipmentData(); // โหลดตารางอุปกรณ์ใหม่เพื่อให้เห็นยอดคงเหลือล่าสุด
+                    loadEquipmentData(); 
                 });
             } catch (e) {
                 document.getElementById('statusModal').style.display = 'none';
@@ -1054,7 +1122,6 @@
                         const docRef = doc(db, "bookings", docId);
                         const docSnap = await getDoc(docRef);
                         
-                        // คืนของเข้าคลังหากกำลังยืมอยู่แล้วแอดมินลบข้อมูล
                         if (docSnap.exists()) {
                             const bData = docSnap.data();
                             if (bData.status === 'ยืนยันแล้ว' || bData.status === 'รอคืนของ') {
@@ -1070,7 +1137,7 @@
                         }
 
                         await deleteDoc(docRef);
-                        window.showModal('สำเร็จ', 'ลบข้อมูลสำเร็จ', 'alert', () => { 
+                        window.showModal('สำเร็จ', 'ลบข้อมูลสำเร็จ', 'success', () => { 
                             loadAdminData(); 
                             loadEquipmentData(); 
                         });
@@ -1118,7 +1185,7 @@
             }
             try {
                 await setDoc(settingsDocRef, { maxBookingsPerDay: maxVal }, { merge: true });
-                window.showModal('สำเร็จ', 'อัปเดตการตั้งค่าระบบเรียบร้อยแล้ว', 'alert');
+                window.showModal('สำเร็จ', 'อัปเดตการตั้งค่าระบบเรียบร้อยแล้ว', 'success');
             } catch(e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกการตั้งค่า', 'alert'); }
         }
 
@@ -1142,10 +1209,10 @@
                 if (docId) {
                     const docRef = doc(db, "equipment", docId);
                     await updateDoc(docRef, { name: name, quantity: qty });
-                    window.showModal('สำเร็จ', 'อัปเดตอุปกรณ์สำเร็จ', 'alert', () => { loadEquipmentData(); });
+                    window.showModal('สำเร็จ', 'อัปเดตอุปกรณ์สำเร็จ', 'success', () => { loadEquipmentData(); });
                 } else {
                     await addDoc(equipmentCollection, { name: name, quantity: qty });
-                    window.showModal('สำเร็จ', 'เพิ่มอุปกรณ์สำเร็จ', 'alert', () => { loadEquipmentData(); });
+                    window.showModal('สำเร็จ', 'เพิ่มอุปกรณ์สำเร็จ', 'success', () => { loadEquipmentData(); });
                 }
                 document.getElementById('equipmentModal').style.display = 'none';
             } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert'); }
@@ -1157,7 +1224,7 @@
                     try {
                         const docRef = doc(db, "equipment", docId);
                         await deleteDoc(docRef);
-                        window.showModal('สำเร็จ', 'ลบอุปกรณ์สำเร็จ', 'alert', () => { loadEquipmentData(); });
+                        window.showModal('สำเร็จ', 'ลบอุปกรณ์สำเร็จ', 'success', () => { loadEquipmentData(); });
                     } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert'); }
                 }
             });
@@ -1194,7 +1261,7 @@
                     password: newPassword, faculty: newFaculty, major: newMajor, year: newYear 
                 });
                 document.getElementById('editUserModal').style.display = 'none';
-                window.showModal('สำเร็จ', 'อัปเดตข้อมูลสมาชิกเรียบร้อย', 'alert', () => { loadUsersData(); });
+                window.showModal('สำเร็จ', 'อัปเดตข้อมูลสมาชิกเรียบร้อย', 'success', () => { loadUsersData(); });
             } catch(e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'alert'); }
         }
 
@@ -1204,7 +1271,7 @@
                     try {
                         const docRef = doc(db, "users", docId);
                         await deleteDoc(docRef);
-                        window.showModal('สำเร็จ', 'ลบสมาชิกออกจากระบบสำเร็จ', 'alert', () => { loadUsersData(); });
+                        window.showModal('สำเร็จ', 'ลบสมาชิกออกจากระบบสำเร็จ', 'success', () => { loadUsersData(); });
                     } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert'); }
                 }
             });
