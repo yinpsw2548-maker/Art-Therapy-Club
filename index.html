@@ -7,42 +7,95 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #F7F5F2; --primary-color: #A3B18A; --primary-hover: #588157;
-            --text-color: #344E41; --card-bg: #FFFFFF; --danger-color: #e07a5f;
-            --warning-color: #f4a261; --info-color: #3d5a80;
+            --bg-color: #F7F5F2;
+            --primary-color: #A3B18A;
+            --primary-hover: #588157;
+            --text-color: #344E41;
+            --card-bg: #FFFFFF;
+            --danger-color: #e07a5f;
+            --warning-color: #f4a261;
+            --info-color: #3d5a80;
         }
-        body { font-family: 'Prompt', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 1rem; min-height: 100vh; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; background: var(--card-bg); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); display: none; margin-bottom: 2rem; }
-        .active-page { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        h1, h2, h3 { text-align: center; margin-bottom: 1rem; }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            display: none;
+            margin: 0 auto;
+        }
+
+        .active-page { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 { text-align: center; margin-bottom: 1.5rem; font-weight: 500; }
         .form-group { margin-bottom: 1rem; text-align: left; }
-        label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Prompt', sans-serif; }
-        button { width: 100%; padding: 12px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: 0.3s; margin-top: 0.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        input, select {
+            width: 100%; padding: 10px; border: 1px solid #ddd;
+            border-radius: 8px; box-sizing: border-box;
+            font-family: 'Prompt', sans-serif; background-color: #fafafa;
+        }
+        
+        button {
+            width: 100%; padding: 12px; background-color: var(--primary-color);
+            color: white; border: none; border-radius: 8px; cursor: pointer;
+            font-size: 1rem; font-family: 'Prompt', sans-serif; transition: background 0.3s;
+            margin-top: 1rem;
+        }
         button:hover { background-color: var(--primary-hover); }
+        
         .logout-btn { background-color: var(--danger-color); margin-top: 2rem; }
+        .action-btn { padding: 6px 10px; margin: 2px; font-size: 0.8rem; border-radius: 4px; color: white; border: none; cursor: pointer; }
+
+        /* ระบบ Table สำหรับ Admin */
         .admin-container { max-width: 1000px; }
         .table-responsive { overflow-x: auto; margin-bottom: 2rem; }
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.85rem; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background-color: #f9f9f9; }
-        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 500; background: #eee; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        
+        /* สไตล์การ์ดผู้ใช้งานแบบเดิม */
+        .booking-card {
+            background: #fafafa; border: 1px solid #eaeaea; border-radius: 12px;
+            padding: 1.2rem; margin-bottom: 1rem; text-align: left;
+            position: relative; border-left: 5px solid var(--primary-color);
+        }
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; background: #eee; }
         .status-confirmed { background-color: #d3f9d8; color: #2b8a3e; }
-        .status-return { background-color: #e2eafc; color: #1a4f8b; }
-        .action-btn { padding: 5px 8px; font-size: 0.75rem; border-radius: 4px; color: white; border: none; cursor: pointer; margin: 2px; }
-        .booking-card { background: #fafafa; border: 1px solid #eee; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; position: relative; border-left: 5px solid var(--primary-color); }
-        .notif-btn { background-color: #3d5a80; font-size: 0.8rem; margin-bottom: 1rem; }
-        .name-group { display: flex; gap: 10px; }
-        .admin-divider { border-top: 2px dashed #ddd; margin: 2rem 0; }
+        
+        #notifBanner {
+            display: none; background: #3d5a80; color: white; padding: 12px;
+            border-radius: 8px; margin-bottom: 1.5rem; text-align: center; cursor: pointer;
+            animation: fadeIn 1s;
+        }
+        .success-icon { font-size: 3rem; margin-bottom: 1rem; display: block; animation: fadeIn 0.5s; }
     </style>
 </head>
 <body>
 
-    <div id="customModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center;">
-        <div style="background:white; padding:2rem; border-radius:16px; width:80%; max-width:350px; text-align:center;">
+    <div id="customModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:1000; justify-content:center; align-items:center;">
+        <div style="background:white; padding:2rem; border-radius:16px; width:85%; max-width:350px; text-align:center;">
             <div id="modalIcon"></div>
-            <h3 id="modalTitle"></h3>
+            <h3 id="modalTitle" style="margin-top:0;"></h3>
             <p id="modalText"></p>
             <button onclick="closeModal()">ตกลง</button>
         </div>
@@ -50,75 +103,54 @@
 
     <div id="loginPage" class="container active-page">
         <h1>Art Therapy Club</h1>
-        <div class="form-group"><label>รหัสนักศึกษา</label><input type="text" id="lUser" placeholder="6xxxxxxx"></div>
-        <div class="form-group"><label>รหัสผ่าน</label><input type="password" id="lPass"></div>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">ลงชื่อเข้าใช้ระบบจองอุปกรณ์</p>
+        <div class="form-group"><label>Username / รหัสนักศึกษา</label><input type="text" id="lUser"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="lPass"></div>
         <button onclick="login()">เข้าสู่ระบบ</button>
-        <button class="link-btn" style="background:none; color:var(--primary-hover); text-decoration:underline;" onclick="showPage('registerPage')">สมัครสมาชิก</button>
-        <button style="background:none; color:#ccc; margin-top:2rem;" onclick="loginAdmin()">Admin Login</button>
+        <button style="background:none; color:var(--primary-color); text-decoration:underline;" onclick="showPage('registerPage')">สมัครสมาชิกใหม่</button>
+        <button style="background:none; color:#ccc; margin-top: 1rem;" onclick="loginAdmin()">แอดมิน</button>
     </div>
 
     <div id="registerPage" class="container">
-        <h2>ลงทะเบียนสมาชิก 📝</h2>
+        <h2>สมัครสมาชิก 📝</h2>
+        <div class="form-group"><label>ชื่อ-นามสกุล</label><input type="text" id="rName"></div>
         <div class="form-group"><label>รหัสนักศึกษา</label><input type="text" id="rUser"></div>
-        <div class="name-group">
-            <div class="form-group"><label>ชื่อ</label><input type="text" id="rFName"></div>
-            <div class="form-group"><label>นามสกุล</label><input type="text" id="rLName"></div>
-        </div>
-        <div class="form-group"><label>คณะ (มน.)</label>
-            <select id="rFaculty">
-                <option value="คณะมนุษยศาสตร์">คณะมนุษยศาสตร์</option>
-                <option value="คณะบริหารธุรกิจฯ">คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร</option>
-                <option value="คณะสถาปัตยกรรมศาสตร์ฯ">คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ</option>
-                <option value="คณะวิศวกรรมศาสตร์">คณะวิศวกรรมศาสตร์</option>
-                <option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option>
-            </select>
-        </div>
-        <div class="form-group"><label>ชั้นปี</label><select id="rYear"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+        <div class="form-group"><label>คณะ</label><input type="text" id="rFaculty"></div>
         <div class="form-group"><label>รหัสผ่าน</label><input type="password" id="rPass"></div>
-        <button onclick="register()">ยืนยันการสมัคร</button>
+        <button onclick="register()">ลงทะเบียน</button>
         <button style="background:#ccc;" onclick="showPage('loginPage')">ยกเลิก</button>
     </div>
 
     <div id="homePage" class="container">
-        <button id="btnNotif" class="notif-btn" onclick="askNotif()">🔔 เปิดแจ้งเตือน SMS ฟรี (แนะนำ)</button>
-        <h2>จองคิวอุปกรณ์</h2>
-        <p>ยินดีต้อนรับ: <span id="uDisplayName" style="font-weight:bold;"></span></p>
-        
+        <div id="notifBanner" onclick="askNotif()">🔔 คลิกเปิดแจ้งเตือนเหมือน SMS ที่นี่</div>
+        <h2>จองคิวใช้อุปกรณ์ 🎨</h2>
+        <p>คุณ: <span id="uDisplayName" style="font-weight: 500;"></span></p>
+
         <form id="bookingForm">
             <div class="form-group"><label>วันที่</label><input type="date" id="bDate" onchange="checkStock()"></div>
             <div class="form-group"><label>เวลา</label>
                 <select id="bTime" onchange="checkStock()">
-                    <option value="10:00-12:00">10:00 - 12:00 น.</option>
-                    <option value="13:00-15:00">13:00 - 15:00 น.</option>
+                    <option value="10:00 - 12:00">10:00 - 12:00 น.</option>
+                    <option value="13:00 - 15:00">13:00 - 15:00 น.</option>
                 </select>
             </div>
-            <div class="form-group"><label>อุปกรณ์ <span id="stockCount" style="color:var(--primary-hover)"></span></label><select id="bEq" onchange="checkStock()"></select></div>
+            <div class="form-group"><label>อุปกรณ์ <span id="stockCount"></span></label><select id="bEq" onchange="checkStock()"></select></div>
             <div class="form-group"><label>จำนวน</label><input type="number" id="bQty" value="1" min="1"></div>
             <button type="button" onclick="submitBooking()">ยืนยันการจอง</button>
         </form>
 
         <div id="userBookings" style="margin-top:2rem;">
-            <h3>สถานะการจองของคุณ</h3>
+            <h3>สถานะของคุณ</h3>
             <div id="bookingList"></div>
         </div>
         <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
     </div>
 
     <div id="adminPage" class="container admin-container">
-        <h2>ระบบจัดการหลังบ้าน 👑</h2>
-        <h3>📥 รายการจองใหม่/รออนุมัติ</h3>
-        <div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>ชื่อ</th><th>อุปกรณ์</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="aTableBooking"></tbody></table></div>
-        
-        <div class="admin-divider"></div>
-        <h3>📦 รายการคืนอุปกรณ์</h3>
-        <div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>ชื่อ</th><th>อุปกรณ์</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="aTableReturn"></tbody></table></div>
-
-        <div class="admin-divider"></div>
-        <h3>🛠️ จัดการสต๊อกอุปกรณ์</h3>
-        <button style="width:auto; padding:8px 15px;" onclick="addEquipment()">+ เพิ่มอุปกรณ์</button>
-        <div class="table-responsive"><table><thead><tr><th>ชื่ออุปกรณ์</th><th>สต๊อกคงเหลือ</th><th>จัดการ</th></tr></thead><tbody id="aTableEq"></tbody></table></div>
-        
-        <button class="logout-btn" onclick="logout()">Logout Admin</button>
+        <h2>ระบบหลังบ้านแอดมิน 👑</h2>
+        <h3>รายการจอง</h3>
+        <div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>ผู้จอง</th><th>อุปกรณ์</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="aTable"></tbody></table></div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
     <script type="module">
@@ -136,161 +168,144 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let user = null;
+        let currentUser = null;
+        let unsubscribe = null;
 
         // --- Notification Logic ---
         window.askNotif = () => {
-            Notification.requestPermission().then(res => {
-                if(res === 'granted') {
-                    document.getElementById('btnNotif').style.display = 'none';
-                    new Notification("สำเร็จ!", { body: "คุณจะได้รับการแจ้งเตือนเมื่อแอดมินอนุมัติคิวครับ", icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
+            Notification.requestPermission().then(perm => {
+                if (perm === 'granted') {
+                    document.getElementById('notifBanner').style.display = 'none';
+                    new Notification("เปิดระบบแล้ว!", { body: "คุณจะได้รับการแจ้งเตือนสถานะที่นี่" });
                 }
             });
         };
 
         function pushNotif(title, body) {
-            if(Notification.permission === 'granted') {
-                new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/1827/1827347.png" });
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
             }
         }
 
-        // --- Stock Logic ---
-        window.checkStock = async () => {
-            const eqName = document.getElementById('bEq').value;
-            if(!eqName) return;
-            const q = query(collection(db, "equipment"), where("name", "==", eqName));
-            const snap = await getDocs(q);
-            if(!snap.empty) {
-                const qty = snap.docs[0].data().quantity;
-                document.getElementById('stockCount').innerText = `(เหลือ: ${qty})`;
-                document.getElementById('bQty').max = qty;
-            }
+        // --- Auth Logic ---
+        window.onload = () => {
+            const saved = localStorage.getItem('art_user');
+            if (saved) { currentUser = JSON.parse(saved); initHome(); }
+            if (Notification.permission === 'default') document.getElementById('notifBanner').style.display = 'block';
         };
 
-        // --- User Actions ---
         window.login = async () => {
             const u = document.getElementById('lUser').value;
             const p = document.getElementById('lPass').value;
             const q = query(collection(db, "users"), where("username", "==", u), where("password", "==", p));
             const snap = await getDocs(q);
-            if(!snap.empty) {
-                user = snap.docs[0].data();
-                localStorage.setItem('art_user', JSON.stringify(user));
-                initUser();
+            if (!snap.empty) {
+                currentUser = snap.docs[0].data();
+                localStorage.setItem('art_user', JSON.stringify(currentUser));
+                initHome();
             } else { alert("รหัสผ่านไม่ถูกต้อง"); }
         };
 
-        function initUser() {
-            document.getElementById('uDisplayName').innerText = user.firstName;
+        function initHome() {
+            document.getElementById('uDisplayName').innerText = currentUser.name;
             showPage('homePage');
             loadEquipment();
             listenBookings();
         }
 
-        window.submitBooking = async () => {
-            const date = document.getElementById('bDate').value;
-            const time = document.getElementById('bTime').value;
-            const eq = document.getElementById('bEq').value;
-            const qty = parseInt(document.getElementById('bQty').value);
-            if(!date || !eq || qty < 1) return alert("กรุณากรอกข้อมูลให้ครบ");
-
-            await addDoc(collection(db, "bookings"), {
-                uid: user.username, name: user.firstName + " " + user.lastName,
-                date, time, equipment: eq, quantity: qty, status: "รออนุมัติ", createdAt: Date.now()
-            });
-            showModal("✅ จองสำเร็จ", "รอแอดมินอนุมัติ จะมีการแจ้งเตือนเด้งบอกครับ", "success");
-        };
-
+        // --- Booking & Real-time Notification ---
         function listenBookings() {
-            const q = query(collection(db, "bookings"), where("uid", "==", user.username));
-            onSnapshot(q, (snap) => {
+            if (unsubscribe) unsubscribe();
+            const q = query(collection(db, "bookings"), where("uid", "==", currentUser.username));
+            unsubscribe = onSnapshot(q, (snap) => {
                 const list = document.getElementById('bookingList');
                 list.innerHTML = "";
                 let hasActive = false;
-                snap.forEach(docSnap => {
-                    const b = docSnap.data();
-                    if(b.status === "ยืนยันแล้ว" || b.status === "รอคืนของ") hasActive = true;
-                    const badge = b.status === "ยืนยันแล้ว" ? "status-confirmed" : (b.status === "รอคืนของ" ? "status-return" : "");
+                snap.forEach(d => {
+                    const b = d.data();
+                    if (b.status === "ยืนยันแล้ว") hasActive = true;
                     list.innerHTML += `
                         <div class="booking-card">
-                            <span class="status-badge ${badge}" style="float:right">${b.status}</span>
-                            <p><strong>${b.equipment}</strong> (จำนวน ${b.quantity})</p>
-                            <p style="font-size:0.8rem; color:#666;">วันเวลา: ${b.date} | ${b.time}</p>
-                            ${b.status === "ยืนยันแล้ว" ? `<button style="padding:5px; font-size:0.8rem;" onclick="returnItem('${docSnap.id}')">คืนของ</button>` : ""}
+                            <span class="status-badge ${b.status==='ยืนยันแล้ว'?'status-confirmed':''}">${b.status}</span>
+                            <p><strong>${b.equipment}</strong> (x${b.quantity})</p>
+                            <p style="font-size:0.8rem; color:#666;">วันที่: ${b.date}</p>
                         </div>`;
                 });
-                document.getElementById('bookingForm').style.display = hasActive ? "none" : "block";
+                document.getElementById('bookingForm').style.display = hasActive ? 'none' : 'block';
                 
+                // ระบบเด้งแจ้งเตือน Real-time เมื่อแอดมินเปลี่ยนสถานะ
                 snap.docChanges().forEach(change => {
                     if (change.type === "modified") {
                         const data = change.doc.data();
-                        if(data.status === "ยืนยันแล้ว") pushNotif("การจองอนุมัติแล้ว! ✅", `รายการ ${data.equipment} พร้อมใช้งาน`);
+                        if (data.status === "ยืนยันแล้ว") {
+                            pushNotif("อนุมัติแล้ว! ✅", `อุปกรณ์ ${data.equipment} ของคุณพร้อมแล้วครับ`);
+                            showModal("อนุมัติแล้ว!", `การจองของคุณได้รับการยืนยันแล้ว`, "success");
+                        }
                     }
                 });
             });
         }
 
-        window.returnItem = async (id) => {
-            await updateDoc(doc(db, "bookings", id), { status: "รอคืนของ" });
-            showModal("ส่งคำขอคืนแล้ว", "โปรดรอแอดมินกดยืนยันการรับของคืน", "success");
+        window.submitBooking = async () => {
+            const date = document.getElementById('bDate').value;
+            const eq = document.getElementById('bEq').value;
+            const qty = parseInt(document.getElementById('bQty').value);
+            if (!date || !eq) return alert("กรุณาเลือกข้อมูลให้ครบ");
+            
+            await addDoc(collection(db, "bookings"), {
+                uid: currentUser.username, name: currentUser.name,
+                date, equipment: eq, quantity: qty, status: "รออนุมัติ", createdAt: Date.now()
+            });
+            showModal("ส่งคำขอแล้ว", "รอแอดมินตรวจสอบ จะมีการแจ้งเตือนเด้งบอกครับ", "alert");
         };
 
-        // --- Admin Actions ---
-        window.changeStatus = async (id, newStatus) => {
-            const bRef = doc(db, "bookings", id);
-            const bSnap = await getDoc(bRef);
-            const bData = bSnap.data();
-
-            if(newStatus === "ยืนยันแล้ว") {
-                const eqSnap = await getDocs(query(collection(db, "equipment"), where("name", "==", bData.equipment)));
-                if(!eqSnap.empty) {
-                    const eqDoc = eqSnap.docs[0];
-                    await updateDoc(doc(db, "equipment", eqDoc.id), { quantity: eqDoc.data().quantity - bData.quantity });
-                }
-            } else if(newStatus === "คืนแล้ว") {
-                const eqSnap = await getDocs(query(collection(db, "equipment"), where("name", "==", bData.equipment)));
-                if(!eqSnap.empty) {
-                    const eqDoc = eqSnap.docs[0];
-                    await updateDoc(doc(db, "equipment", eqDoc.id), { quantity: eqDoc.data().quantity + bData.quantity });
-                }
-            }
-            await updateDoc(bRef, { status: newStatus });
-            loadAdminData();
+        // --- Helper Functions ---
+        window.showPage = (id) => { 
+            document.querySelectorAll('.container').forEach(c => c.classList.remove('active-page')); 
+            document.getElementById(id).classList.add('active-page'); 
         };
-
-        // --- Helpers ---
-        window.showPage = (id) => { document.querySelectorAll('.container').forEach(c => c.classList.remove('active-page')); document.getElementById(id).classList.add('active-page'); };
         window.logout = () => { localStorage.clear(); location.reload(); };
-        window.showModal = (title, text, type) => { document.getElementById('modalTitle').innerText = title; document.getElementById('modalText').innerText = text; document.getElementById('modalIcon').innerHTML = type==='success'?'<div style="font-size:3rem;">✅</div>':''; document.getElementById('customModal').style.display='flex'; };
-        window.closeModal = () => { document.getElementById('customModal').style.display='none'; };
-        
+        window.showModal = (title, text, type) => {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalText').innerText = text;
+            document.getElementById('modalIcon').innerHTML = type === 'success' ? '<span class="success-icon">✅</span>' : '';
+            document.getElementById('customModal').style.display = 'flex';
+        };
+        window.closeModal = () => document.getElementById('customModal').style.display = 'none';
+
         async function loadEquipment() {
             const snap = await getDocs(collection(db, "equipment"));
             const sel = document.getElementById('bEq'); sel.innerHTML = "";
             snap.forEach(d => { sel.innerHTML += `<option value="${d.data().name}">${d.data().name}</option>`; });
-            checkStock();
+        }
+        
+        window.loginAdmin = () => {
+            const p = prompt("Admin Password");
+            if(p === "1234") { showPage('adminPage'); loadAdminData(); }
         }
 
         async function loadAdminData() {
             const snap = await getDocs(collection(db, "bookings"));
-            const bT = document.getElementById('aTableBooking'); bT.innerHTML = "";
-            const rT = document.getElementById('aTableReturn'); rT.innerHTML = "";
-            let bi=1, ri=1;
+            const t = document.getElementById('aTable'); t.innerHTML = "";
+            let i = 1;
             snap.forEach(d => {
                 const b = d.data();
-                const row = `<tr><td>${b.status==='รอคืนของ'?ri++:bi++}</td><td>${b.name}</td><td>${b.equipment}(x${b.quantity})</td><td>${b.status}</td><td>
-                    <button class="action-btn" style="background:green" onclick="changeStatus('${d.id}','${b.status==='รอคืนของ'?'คืนแล้ว':'ยืนยันแล้ว'}')">OK</button>
-                    <button class="action-btn" style="background:red" onclick="changeStatus('${d.id}','ยกเลิก')">X</button>
-                </td></tr>`;
-                if(b.status === 'รอคืนของ' || b.status === 'คืนแล้ว') rT.innerHTML += row; else bT.innerHTML += row;
+                t.innerHTML += `<tr><td>${i++}</td><td>${b.name}</td><td>${b.equipment}</td><td>${b.status}</td><td><button class="action-btn" style="background:green" onclick="changeStatus('${d.id}', 'ยืนยันแล้ว')">ยืนยัน</button></td></tr>`;
             });
         }
-        
-        // ฟังก์ชัน Admin เสริม (ก๊อปปี้จากตัวก่อนหน้าเพื่อความครบถ้วน)
-        window.loginAdmin = () => { const p = prompt("Admin Password"); if(p==='1234'){ localStorage.setItem('admin','true'); showPage('adminPage'); loadAdminData(); loadEqAdmin(); } };
-        async function loadEqAdmin() { const snap = await getDocs(collection(db, "equipment")); const t = document.getElementById('aTableEq'); t.innerHTML = ""; snap.forEach(d => { t.innerHTML += `<tr><td>${d.data().name}</td><td>${d.data().quantity}</td><td><button class="action-btn" style="background:red" onclick="deleteDoc(doc(db,'equipment','${d.id}'));loadEqAdmin();">ลบ</button></td></tr>`; }); }
-        window.addEquipment = async () => { const n = prompt("ชื่ออุปกรณ์"); const q = prompt("จำนวน"); if(n&&q) await addDoc(collection(db,"equipment"),{name:n, quantity:parseInt(q)}); loadEqAdmin(); };
-        window.register = async () => { /* ฟังก์ชันลงทะเบียนเดิม */ };
+
+        window.changeStatus = async (id, s) => {
+            const bRef = doc(db, "bookings", id);
+            const bSnap = await getDoc(bRef);
+            if(s === "ยืนยันแล้ว") {
+                // ระบบตัดสต๊อกจริง (ตัวอย่าง)
+                const eqQ = query(collection(db, "equipment"), where("name", "==", bSnap.data().equipment));
+                const eqSnap = await getDocs(eqQ);
+                if(!eqSnap.empty) await updateDoc(doc(db, "equipment", eqSnap.docs[0].id), { quantity: eqSnap.docs[0].data().quantity - bSnap.data().quantity });
+            }
+            await updateDoc(bRef, { status: s });
+            loadAdminData();
+        }
     </script>
 </body>
 </html>
