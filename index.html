@@ -235,33 +235,23 @@
         window.currentEqRemaining = null; 
         let unsubscribeBookings = null;
 
-        // --- ระบบแจ้งเตือน (Notification) ---
+        // --- เพิ่มระบบแจ้งเตือน (SMS-like Notification) ---
         window.requestNotifPermission = function() {
             if (!("Notification" in window)) {
-                alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน");
+                alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือนหน้าจอ");
                 return;
             }
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
                     document.getElementById('notifBanner').style.display = 'none';
-                    new Notification("สำเร็จ!", { body: "คุณได้เปิดการแจ้งเตือนเรียบร้อยแล้ว" });
+                    new Notification("สำเร็จ!", { body: "คุณได้เปิดการแจ้งเตือนสถานะแล้ว 🎉", icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
                 }
             });
         };
 
-        function checkNotifPermission() {
-            if ("Notification" in window) {
-                if (Notification.permission === "default") {
-                    document.getElementById('notifBanner').style.display = 'block';
-                } else {
-                    document.getElementById('notifBanner').style.display = 'none';
-                }
-            }
-        }
-
         function showBrowserNotification(title, body) {
             if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body: body });
+                new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/1827/1827347.png" });
             }
         }
 
@@ -275,7 +265,9 @@
             } else if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 document.getElementById('displayUserName').innerText = currentUser.name;
-                checkNotifPermission();
+                if ("Notification" in window && Notification.permission === "default") {
+                    document.getElementById('notifBanner').style.display = 'block';
+                }
                 window.updateAvailableTimes(); 
                 window.showPage('homePage'); 
                 await loadEquipmentData(); 
@@ -371,7 +363,6 @@
                 snap.forEach(d => { currentUser = { id: d.id, ...d.data() }; });
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 document.getElementById('displayUserName').innerText = currentUser.name;
-                checkNotifPermission();
                 window.showPage('homePage'); await loadEquipmentData(); loadUserBookings();
             }
         }
@@ -383,13 +374,12 @@
             const q = parseInt(document.getElementById('bookQuantity').value);
             if(!d || !t || !eq || q < 1) { window.showModal('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลให้ครบ'); return; }
             if(q > window.currentEqRemaining) { window.showModal('ของไม่พอ', 'ขออภัย จำนวนอุปกรณ์ไม่พอ'); return; }
-            
             await addDoc(bookingsCollection, {
                 userId: currentUser.username, name: currentUser.name, date: d, time: t,
                 equipment: eq, quantity: q, status: 'รออนุมัติ', createdAt: new Date()
             });
             document.getElementById('bookingForm').reset();
-            window.showModal('จองสำเร็จ!', 'รอ Admin อนุมัติคิวของคุณนะครับ', 'success');
+            window.showModal('จองสำเร็จ!', 'รอ Admin อนุมัติคิว จะมีแจ้งเตือนเด้งบอกครับ', 'success');
         }
 
         async function loadUserBookings() {
@@ -415,8 +405,8 @@
                     if (change.type === "modified") {
                         const data = change.doc.data();
                         if (data.status === 'ยืนยันแล้ว') {
-                            showBrowserNotification('อนุมัติการจองแล้ว!', `อุปกรณ์ ${data.equipment} ของคุณพร้อมใช้งานแล้ว`);
-                            window.showModal('ยินดีด้วย!', `รายการ ${data.equipment} ได้รับการอนุมัติแล้ว`, 'success');
+                            showBrowserNotification('คิวจองได้รับการยืนยัน! ✅', `รายการ ${data.equipment} ของคุณได้รับการอนุมัติแล้วครับ`);
+                            window.showModal('ยืนยันแล้ว!', `รายการ ${data.equipment} ได้รับการอนุมัติแล้ว`, 'success');
                         }
                     }
                 });
@@ -425,7 +415,7 @@
 
         window.requestReturn = async (id) => {
             await updateDoc(doc(db, "bookings", id), { status: 'รอคืนของ' });
-            window.showModal('สำเร็จ', 'ส่งคำขอคืนแล้ว รอการยืนยัน', 'success');
+            window.showModal('สำเร็จ', 'ส่งคำขอคืนแล้ว รอแอดมินยืนยันครับ', 'success');
         }
 
         window.saveStatusEdit = async () => {
@@ -434,12 +424,10 @@
             const bRef = doc(db, "bookings", id);
             const bSnap = await getDoc(bRef);
             const bData = bSnap.data();
-            
             const isDeducted = (s) => s === 'ยืนยันแล้ว' || s === 'รอคืนของ';
             let stockChange = 0;
             if (!isDeducted(bData.status) && isDeducted(newS)) stockChange = -bData.quantity;
             else if (isDeducted(bData.status) && !isDeducted(newS)) stockChange = bData.quantity;
-
             if (stockChange !== 0) {
                 const eqQ = query(equipmentCollection, where("name", "==", bData.equipment));
                 const eqSnap = await getDocs(eqQ);
@@ -464,60 +452,152 @@
             const snap = await getDocs(bookingsCollection); 
             bT.innerHTML=''; rT.innerHTML=''; 
             let bi=1, ri=1; 
-            let sorted = [];
-            snap.forEach(d => sorted.push({id: d.id, ...d.data()}));
-            sorted.sort((a,b) => a.createdAt - b.createdAt);
-
-            sorted.forEach(b => { 
-                const isR = b.status==='รอคืนของ'||b.status==='คืนแล้ว'; 
-                const row = `<tr><td>${isR?ri++:bi++}</td><td>${b.date}</td><td>${b.time}</td><td>${b.name}</td><td>${b.equipment}(x${b.quantity})</td><td><span class="status-badge">${b.status}</span></td><td><button class="action-btn btn-edit" onclick="window.changeStatus('${b.id}','${b.status}')">เปลี่ยน</button></td></tr>`; 
+            snap.forEach(d => { 
+                const b = d.data(); const isR = b.status==='รอคืนของ'||b.status==='คืนแล้ว'; 
+                const row = `<tr><td>${isR?ri++:bi++}</td><td>${b.date}</td><td>${b.time}</td><td>${b.name}</td><td>${b.equipment}(x${b.quantity})</td><td><span class="status-badge">${b.status}</span></td><td><button class="action-btn btn-edit" onclick="window.changeStatus('${d.id}','${b.status}')">เปลี่ยน</button></td></tr>`; 
                 if(isR) rT.innerHTML+=row; else bT.innerHTML+=row; 
             }); 
         }
 
         window.changeStatus = (id, s) => { document.getElementById('statusDocId').value=id; document.getElementById('newStatusSelect').value=s; document.getElementById('statusModal').style.display='flex'; }
         
-        window.submitRegister = async () => {
-            const u = document.getElementById('regUsername').value;
-            const f = document.getElementById('regFirstName').value;
-            const l = document.getElementById('regLastName').value;
-            const fac = document.getElementById('regFaculty').value;
-            const m = document.getElementById('regMajor').value;
-            const y = document.getElementById('regYear').value;
-            const p = document.getElementById('regPassword').value;
-            if(!u || !f || !l || !p) return alert("กรอกข้อมูลให้ครบ");
-            await addDoc(usersCollection, { username: u, firstName: f, lastName: l, name: f+" "+l, faculty: fac, major: m, year: y, password: p });
-            window.showModal("สำเร็จ", "สมัครสมาชิกเรียบร้อย", "success", () => window.showPage('loginPage'));
+        window.submitRegister = async function() {
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const faculty = document.getElementById('regFaculty').value;
+            const major = document.getElementById('regMajor').value;
+            const year = document.getElementById('regYear').value;
+
+            if(!firstName || !lastName || !username || !password || !faculty || !major || !year) {
+                window.showModal('ผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'alert');
+                return;
+            }
+
+            try {
+                const q = query(usersCollection, where("username", "==", username));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    window.showModal('ผิดพลาด', 'รหัสนักศึกษานี้ถูกใช้งานแล้ว', 'alert');
+                    return;
+                }
+
+                await addDoc(usersCollection, {
+                    firstName: firstName, lastName: lastName, name: firstName + ' ' + lastName,
+                    username: username, password: password, faculty: faculty, major: major, year: year
+                });
+
+                window.showModal('สำเร็จ', 'สมัครสมาชิกเรียบร้อยแล้ว\nกรุณาเข้าสู่ระบบ', 'success', () => {
+                    document.getElementById('regFirstName').value = ''; document.getElementById('regLastName').value = ''; 
+                    document.getElementById('regUsername').value = ''; document.getElementById('regPassword').value = ''; 
+                    document.getElementById('regFaculty').value = ''; document.getElementById('regMajor').value = ''; 
+                    document.getElementById('regYear').value = '';
+                    window.showPage('loginPage');
+                });
+            } catch (e) {
+                window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert');
+            }
         }
 
-        window.saveSystemSettings = async () => {
-            const v = parseInt(document.getElementById('maxBookingsInput').value);
-            await setDoc(settingsDocRef, { maxBookingsPerDay: v });
-            window.showModal("สำเร็จ", "บันทึกแล้ว", "success");
+        window.saveSystemSettings = async function() {
+            const maxVal = parseInt(document.getElementById('maxBookingsInput').value);
+            if(isNaN(maxVal) || maxVal < 1) {
+                window.showModal('ข้อมูลไม่ถูกต้อง', 'กรุณาระบุตัวเลขที่มากกว่า 0', 'alert'); return;
+            }
+            try {
+                await setDoc(settingsDocRef, { maxBookingsPerDay: maxVal }, { merge: true });
+                window.showModal('สำเร็จ', 'อัปเดตการตั้งค่าระบบเรียบร้อยแล้ว', 'success');
+            } catch(e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกการตั้งค่า', 'alert'); }
         }
 
-        window.openEquipmentModal = (id='', n='', q='') => { document.getElementById('eqDocId').value=id; document.getElementById('eqName').value=n; document.getElementById('eqQuantity').value=q; document.getElementById('equipmentModal').style.display='flex'; }
-        
-        window.saveEquipment = async () => { 
-            const id=document.getElementById('eqDocId').value, n=document.getElementById('eqName').value, q=parseInt(document.getElementById('eqQuantity').value); 
-            if(id) await updateDoc(doc(db,"equipment",id),{name:n,quantity:q}); 
-            else await addDoc(equipmentCollection,{name:n,quantity:q}); 
-            document.getElementById('equipmentModal').style.display='none'; loadEquipmentData(); 
+        window.openEquipmentModal = function(docId = '', currentName = '', currentQty = '') {
+            document.getElementById('eqDocId').value = docId;
+            document.getElementById('eqName').value = currentName;
+            document.getElementById('eqQuantity').value = currentQty || 1;
+            document.getElementById('eqModalTitle').innerText = docId ? 'แก้ไขอุปกรณ์ 🛠️' : 'เพิ่มอุปกรณ์ใหม่ 🛠️';
+            document.getElementById('equipmentModal').style.display = 'flex';
         }
 
-        window.deleteEquipment = async (id) => { if(confirm("ลบอุปกรณ์นี้?")) { await deleteDoc(doc(db,"equipment",id)); loadEquipmentData(); } }
-        
-        async function loadUsersData() { 
-            const t=document.getElementById('usersTableBody'); 
-            const s=await getDocs(usersCollection); 
-            t.innerHTML=''; let i=1; 
-            s.forEach(d=>{ 
-                const u=d.data(); 
-                t.innerHTML+=`<tr><td>${i++}</td><td>${u.username}</td><td>${u.firstName}</td><td>${u.lastName}</td><td>${u.faculty}</td><td>${u.major}</td><td>${u.year}</td><td>${u.password}</td><td><button class="action-btn btn-delete" onclick="window.deleteUserData('${d.id}')">ลบ</button></td></tr>`; 
-            }); 
+        window.saveEquipment = async function() {
+            const docId = document.getElementById('eqDocId').value;
+            const name = document.getElementById('eqName').value;
+            const qty = parseInt(document.getElementById('eqQuantity').value);
+
+            if(!name || isNaN(qty) || qty < 0) {
+                window.showModal('ข้อมูลไม่ถูกต้อง', 'กรุณากรอกชื่อและจำนวนให้ถูกต้อง', 'alert'); return;
+            }
+            try {
+                if (docId) {
+                    const docRef = doc(db, "equipment", docId);
+                    await updateDoc(docRef, { name: name, quantity: qty });
+                    window.showModal('สำเร็จ', 'อัปเดตอุปกรณ์สำเร็จ', 'success', () => { loadEquipmentData(); });
+                } else {
+                    await addDoc(equipmentCollection, { name: name, quantity: qty });
+                    window.showModal('สำเร็จ', 'เพิ่มอุปกรณ์สำเร็จ', 'success', () => { loadEquipmentData(); });
+                }
+                document.getElementById('equipmentModal').style.display = 'none';
+            } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert'); }
         }
 
-        window.deleteUserData = async (id) => { if(confirm("ลบสมาชิกนี้?")) { await deleteDoc(doc(db,"users",id)); loadUsersData(); } }
+        window.deleteEquipment = function(docId) {
+            window.showModal('ยืนยันการลบ', 'คุณแน่ใจหรือไม่ว่าต้องการลบอุปกรณ์นี้?', 'confirm', async (isConfirm) => {
+                if (isConfirm) {
+                    try {
+                        const docRef = doc(db, "equipment", docId);
+                        await deleteDoc(docRef);
+                        window.showModal('สำเร็จ', 'ลบอุปกรณ์สำเร็จ', 'success', () => { loadEquipmentData(); });
+                    } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert'); }
+                }
+            });
+        }
+
+        window.openEditUserModal = function(docId, username, fName, lName, password, faculty, major, year) {
+            document.getElementById('editUserId').value = docId;
+            document.getElementById('editUserUsername').value = username;
+            document.getElementById('editUserFirstName').value = fName !== '-' ? fName : '';
+            document.getElementById('editUserLastName').value = lName !== '-' ? lName : '';
+            document.getElementById('editUserPassword').value = password;
+            document.getElementById('editUserFaculty').value = faculty;
+            document.getElementById('editUserMajor').value = major;
+            document.getElementById('editUserYear').value = year;
+            document.getElementById('editUserModal').style.display = 'flex';
+        }
+
+        window.saveUserEdit = async function() {
+            const docId = document.getElementById('editUserId').value;
+            const newFName = document.getElementById('editUserFirstName').value;
+            const newLName = document.getElementById('editUserLastName').value;
+            const newFaculty = document.getElementById('editUserFaculty').value;
+            const newMajor = document.getElementById('editUserMajor').value;
+            const newYear = document.getElementById('editUserYear').value;
+            const newPassword = document.getElementById('editUserPassword').value;
+
+            if(!newFName || !newLName || !newPassword || !newFaculty || !newMajor || !newYear) {
+                window.showModal('ข้อมูลไม่ครบ', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'alert'); return;
+            }
+            try {
+                const docRef = doc(db, "users", docId);
+                await updateDoc(docRef, { 
+                    firstName: newFName, lastName: newLName, name: newFName + ' ' + newLName, 
+                    password: newPassword, faculty: newFaculty, major: newMajor, year: newYear 
+                });
+                document.getElementById('editUserModal').style.display = 'none';
+                window.showModal('สำเร็จ', 'อัปเดตข้อมูลสมาชิกเรียบร้อย', 'success', () => { loadUsersData(); });
+            } catch(e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'alert'); }
+        }
+
+        window.deleteUserData = async function(docId) {
+            window.showModal('ยืนยันการลบสมาชิก', 'คุณแน่ใจหรือไม่? หากลบแล้วผู้ใช้นี้จะไม่สามารถเข้าระบบได้อีก', 'confirm', async (isConfirm) => {
+                if (isConfirm) {
+                    try {
+                        const docRef = doc(db, "users", docId);
+                        await deleteDoc(docRef);
+                        window.showModal('สำเร็จ', 'ลบสมาชิกออกจากระบบสำเร็จ', 'success', () => { loadUsersData(); });
+                    } catch (e) { window.showModal('ผิดพลาด', 'เกิดข้อผิดพลาด', 'alert'); }
+                }
+            });
+        }
     </script>
 </body>
 </html>
