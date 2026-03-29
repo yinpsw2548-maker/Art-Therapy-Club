@@ -7,10 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #FFFDF5; /* เปลี่ยนพื้นหลังเป็นสีฟ้าสว่างให้เข้ากับโทนส้มเหลือง */
-            --primary-color: #FF9800; /* สีหลักเปลี่ยนเป็นสีส้มสดใส */
-            --primary-hover: #F57C00; /* สีส้มเข้มขึ้นเมื่อเอาเมาส์ชี้ */
-            --text-color: #4E342E; /* สีตัวอักษรโทนน้ำตาลเข้มให้อ่านง่ายและเข้ากับสีส้ม */
+            --bg-color: #FFFDF5;
+            --primary-color: #FF9800;
+            --primary-hover: #F57C00;
+            --text-color: #4E342E;
             --card-bg: #FFFFFF;
             --danger-color: #e07a5f;
             --warning-color: #f4a261;
@@ -20,13 +20,14 @@
         body {
             font-family: 'Prompt', sans-serif;
             background-color: var(--bg-color);
-            /* เพิ่มพื้นหลังลวดลายดอกไม้ในสวนสวยงาม */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ff9800' fill-opacity='0.1'%3E%3Cpath d='M40 0c0 22.09-17.91 40-40 40 22.09 0 40 17.91 40 40 0-22.09 17.91-40 40-40-22.09 0-40-17.91-40-40zm0 80c0-22.09 17.91-40 40-40-22.09 0-40-17.91-40-40 0 22.09-17.91 40-40 40-22.09 0-40 17.91-40 40z'/%3E%3C/g%3E%3C/svg%3E");
+            /* ลวดลายดอกไม้ด้านหลัง (เข้ารหัส Base64 เพื่อให้แสดงผลชัวร์ 100%) */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PGcgZmlsbD0iI2Y0YTI2MSIgZmlsbC1vcGFjaXR5PSIwLjE1Ij48cGF0aCBkPSJNNTAgMGMxMCAyMCA0MCAyMCA1MCA1MC0yMC0xMC0yMC00MC01MC01MHptMCAxMDBjLTEwLTIwLTQwLTIwLTUwLTUwIDIwIDEwIDIwIDQwIDUwIDUwem01MC01MGMtMjAtMTAtNDAgMjAtNTAgNTAgMTAtMjAgNDAtMjAgNTAtNTB6TTAgNTBjMjAgMTAgNDAtMjAgNTAtNTBDNDAgMjAgMTAgMjAgMCA1MHoiLz48L2c+PGcgZmlsbD0iI2UwN2E1ZiIgZmlsbC1vcGFjaXR5PSIwLjEiPjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjEwIi8+PC9nPjwvc3ZnPg==');
+            background-size: 150px;
             color: var(--text-color);
             margin: 0;
-            padding: 2rem 0;
+            padding: 2rem 0 0 0; /* ดันให้กราฟิกติดขอบล่าง */
             display: flex;
-            flex-direction: column; /* ปรับเพื่อจัดให้ข้อความเครดิตอยู่ด้านล่างสุด */
+            flex-direction: column;
             justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
@@ -40,7 +41,7 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             display: none;
-            margin: 0 auto;
+            margin: 0 auto 2rem auto;
         }
 
         .active-page { display: block; animation: fadeIn 0.5s ease; }
@@ -77,7 +78,7 @@
         .table-responsive { overflow-x: auto; margin-bottom: 2rem; }
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        th { background-color: #FFF3E0; white-space: nowrap; } /* เปลี่ยนหัวตารางเป็นส้มอ่อนให้เข้ากับธีม */
+        th { background-color: #FFF3E0; white-space: nowrap; }
         
         .status-badge {
             padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
@@ -145,6 +146,34 @@
         .card-buttons button { margin-top: 0; padding: 8px; font-size: 0.85rem; }
         .btn-outline { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-hover); }
         .btn-outline:hover { background: var(--primary-color); color: white; }
+
+        /* --- ลาน Graphic Design สวยๆ ด้านล่างสุด --- */
+        .graphic-footer {
+            width: 100%;
+            height: 180px; 
+            /* ลวดลายคลื่นแบบ SVG โทนสีส้มและเหลืองทอง (เข้ารหัส Base64) */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNDQwIDMyMCI+PHBhdGggZmlsbD0iI2ZmYjcwMyIgZmlsbC1vcGFjaXR5PSIwLjQiIGQ9Ik0wLDIyNEw0OCwyMTMuM0M5NiwyMDMsMTkyLDE4MSwyODgsMTg2LjdDMzg0LDE5Miw0ODAsMjI0LDU3NiwyMTMuM0M2NzIsMjAzLDc2OCwxNDksODY0LDEzOC43Qzk2MCwxMjgsMTA1NiwxNjAsMTE1MiwxNjUuM0MxMjQ4LDE3MSwxMzQ0LDE0OSwxMzkyLDEzOC43TDE0NDAsMTI4TDE0NDAsMzIwTDEzOTIsMzIwQzEzNDQsMzIwLDEyNDgsMzIwLDExNTIsMzIwQzEwNTYsMzIwLDk2MCwzMjAsODY0LDMyMEM3NjgsMzIwLDY3MiwzMjAsNTc2LDMyMEM0ODAsMzIwLDM4NCwzMjAsMjg4LDMyMEMxOTIsMzIwLDk2LDMyMCw0OCwzMjBMMCwzMjBaIj48L3BhdGg+PHBhdGggZmlsbD0iI2ZmOTgwMCIgZmlsbC1vcGFjaXR5PSIwLjciIGQ9Ik0wLDI1Nkw0OCwyNTAuN0M5NiwyNDUsMTkyLDIzNSwyODgsMjQwQzM4NCwyNDUsNDgwLDI2Nyw1NzYsMjU2QzY3MiwyNDUsNzY4LDIwMyw4NjQsMTkyQzk2MCwxODEsMTA1NiwyMDMsMTE1MiwyMDhDMTI0OCwyMTMsMTM0NCwyMDMsMTE1MiwyMDhDMTI0OCwyMTMsMTM0NCwyMDMsMTM5MiwxOTcuM0wxNDQwLDE5MkwxNDQwLDMyMEwxMzkyLDMyMEMxMzQ0LDMyMCwxMjQ4LDMyMCwxMTUyLDMyMEMxMDU2LDMyMCw5NjAsMzIwLDg2NCwzMjBDNzY4LDMyMCw2NzIsMzIwLDU3NiwzMjBDNDgwLDMyMCwzODQsMzIwLDI4OCwzMjBDMTkyLDMyMCw5NiwzMjAsNDgsMzIwTDAsMzIwWiI+PC9wYXRoPjwvc3ZnPg==');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            margin-top: auto; 
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .footer-credit {
+            font-size: 0.85rem;
+            color: #4E342E;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.65); 
+            padding: 6px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
@@ -279,14 +308,16 @@
     </div>
 
     <div id="loginPage" class="container active-page">
-        <h1>NU Art Therapy Club</h1> <p style="text-align: center; color: #666; margin-bottom: 2rem;">ลงชื่อเข้าใช้ระบบจองอุปกรณ์</p>
+        <h1>NU Art Therapy Club</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">ลงชื่อเข้าใช้ระบบจองอุปกรณ์</p>
         
         <div class="form-group">
             <label>รหัสนักศึกษา / Username</label>
             <input type="text" id="loginUsername" placeholder="กรอกรหัสนักศึกษา">
         </div>
         <div class="form-group">
-            <label>รหัสผ่าน / Password ( 4 หลัก )</label> <input type="password" id="loginPassword" placeholder="กรอกรหัสผ่าน">
+            <label>รหัสผ่าน / Password ( 4 หลัก )</label>
+            <input type="password" id="loginPassword" placeholder="กรอกรหัสผ่าน">
         </div>
 
         <button onclick="window.loginUser()">เข้าสู่ระบบ</button>
@@ -513,8 +544,8 @@
         <button class="logout-btn" onclick="window.logout()" style="max-width: 200px; margin-top: 2rem;">ออกจากระบบ Admin</button>
     </div>
 
-    <div style="font-size: 0.8rem; color: #888; margin-top: auto; padding-top: 2rem;">
-        บริหารงานโดย สมาชิกชมรม NU Zero Waste
+    <div class="graphic-footer">
+        <div class="footer-credit">บริหารงานโดย สมาชิกชมรม NU Zero Waste</div>
     </div>
 
     <script type="module">
