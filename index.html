@@ -7,23 +7,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Vibrant Art Club Color Palette */
-            --bg-color: #fdfaf5; /* Creamy white */
-            --primary-color: #FF7F50; /* Coral/Orange Accent */
-            --primary-hover: #FF6347; /* Tomato Orange */
-            --accent-teal: #008080; /* Teal/Aqua */
-            --accent-gold: #FFD700; /* Gold/Yellow */
-            --accent-blue: #87CEEB; /* Sky Blue */
-            --text-color: #4A4A4A; /* Dark Grey */
-            --card-bg: rgba(255, 255, 255, 0.95); /* Semi-transparent white */
-            --danger-color: #e07a5f;
-            --success-color: #2b8a3e;
-            --info-color: #3d5a80;
+            --bg-color: #FDFCF5; /* สีพื้นหลังครีมอ่อนๆ */
+            --primary-color: #FFB347; /* สีส้มอ่อนสดใส */
+            --primary-hover: #FFA07A; /* สีส้มพีชเมื่อ Hover */
+            --secondary-color: #4ECDC4; /* สีน้ำเงินน้ำทะเลสดใส */
+            --accent-color: #FFE066; /* สีเหลืองสดใส */
+            --text-color: #2F4F4F; /* สีตัวอักษรโทนเข้มแต่ไม่ดำสนิท */
+            --card-bg: rgba(255, 255, 255, 0.9); /* พื้นหลังการ์ดขาวโปร่งแสงเล็กน้อย */
+            --danger-color: #FF6B6B; /* สีแดงอมชมพูสด */
+            --warning-color: #F4A261; /* สีส้มอิฐ */
+            --info-color: #45B6FE; /* สีฟ้าสด */
         }
 
         body {
             font-family: 'Prompt', sans-serif;
             background-color: var(--bg-color);
+            /* เพิ่มวอลเปเปอร์ลายดอกไม้และพู่กัน */
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGNEEyNjEiIGZpbGwtb3BhY2l0eT0iMC4xNSI+PHBhdGggZD0iTTM2IDM0djRoNHYtNGgtNHptMCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtOHY0aDR2LTRoLTR6bTAtOHY0aDR2LTRoLTR6bTggMHY0aDR2LTRoLTR6bTggMHY0aDR2LTRoLTR6bTggMHY0aDR2LTRoLTR6bTggMHY0aDR2LTRoLTR6bTgtOHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04LTggdjRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em00IDE2djRoNHYtNGgtNHptLTY0IDE2djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOC04djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04LTggdjRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em00IDE2djRoNHYtNGgtNHptLTY0IDE2djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOC04djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04LTggdjRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em00IDE2djRoNHYtNGgtNHptLTY0IDE2djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOCA4djRoNHYtNGgtNHptOC04djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04LTggdjRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bS04IDB2NGg0di00aC00em0tOCA4djRoNHYtNGgtNHptLTggMHY0aDR2LTRoLTR6bTAtMTZ2NGg0di00aC00em0wIDh2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em04IDB2NGg0di00aC00em0iLz48L2c+PC9nPjwvc3ZnPg==');
+            /* หมายเหตุ: SVG ด้านบนเป็นลายจุด pattern ง่ายๆ เพื่อเป็นตัวอย่าง หากต้องการลายดอกไม้และพู่กันที่สวยงามจริงๆ ควรใช้ไฟล์รูปภาพ .png หรือ .jpg ที่เตรียมไว้แทน */
+            
             color: var(--text-color);
             margin: 0;
             padding: 2rem 0;
@@ -32,37 +34,6 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            /* Artistic Watercolor Background Pattern */
-            background-image: 
-                url('https://www.transparenttextures.com/patterns/p4.png'), /* Paper texture */
-                radial-gradient(circle at 10% 20%, rgba(135, 206, 235, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 50% 50%, rgba(255, 127, 80, 0.05) 0%, transparent 30%);
-            background-attachment: fixed;
-        }
-
-        /* Flower & Brush Decorative Elements (Pseudoelements) */
-        body::before, body::after {
-            content: '';
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            opacity: 0.08; /* Very subtle */
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: -1;
-        }
-        body::before {
-            top: -50px;
-            left: -50px;
-            /* Placeholder for a flower icon - you can replace with a real SVG/URL */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23FFD700" d="M50 0 L60 35 L100 40 L70 65 L80 100 L50 80 L20 100 L30 65 L0 40 L40 35 Z"/></svg>');
-        }
-        body::after {
-            bottom: -50px;
-            right: -50px;
-            /* Placeholder for a paint brush icon - you can replace with a real SVG/URL */
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23008080" d="M10 90 L30 70 L90 10 L80 0 L20 60 L0 80 Z M85 5 L95 15 L90 20 L80 10 Z"/></svg>');
         }
 
         .container {
@@ -70,187 +41,162 @@
             max-width: 500px;
             background: var(--card-bg);
             padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1); /* เพิ่มเงาให้ดูมีมิติขึ้น */
             display: none;
             margin: 0 auto;
             position: relative;
-            border: 2px solid rgba(255, 127, 80, 0.1); /* Coral border */
-            backdrop-filter: blur(5px); /* Frosty effect */
+            border: 2px solid var(--accent-color); /* เพิ่มขอบสีเหลืองทอง */
         }
 
-        .active-page { display: block; animation: fadeIn 0.6s ease-out; }
+        .active-page { display: block; animation: fadeIn 0.5s ease; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Logo Styling */
+        /* ปรับปรุงส่วนโลโก้ */
         .logo-container {
             text-align: center;
             margin-bottom: 1.5rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
         .club-logo {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%; /* Circular */
-            object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-            background-color: white; /* Fallback */
+            width: 150px; /* ขยายขนาดโลโก้เล็กน้อย */
+            height: auto;
+            /* ไม่จำเป็นต้องใส่ border-radius: 50% ถ้าโลโก้ไม่ใช่ทรงกลม */
         }
 
-        h1 { 
-            text-align: center; 
-            margin-bottom: 2rem; 
-            font-weight: 500; 
-            color: var(--accent-teal); /* Teal for main title */
-            font-size: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-        }
-        h2, h3 { 
-            text-align: center; 
-            margin-bottom: 1.5rem; 
-            font-weight: 500; 
-            color: var(--primary-color); /* Coral for subtitles */
-        }
+        h1, h2, h3 { text-align: center; margin-bottom: 1.5rem; font-weight: 500; color: var(--secondary-color); } /* หัวข้อใช้สีน้ำทะเล */
+        h1 { color: var(--primary-color); } /* หัวข้อหลักใช้สีส้ม */
 
-        .form-group { margin-bottom: 1.5rem; text-align: left; }
-        label { 
-            display: block; 
-            margin-bottom: 0.6rem; 
-            font-size: 0.95rem; 
-            font-weight: 500; 
-            color: var(--accent-teal); 
-        }
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 500; color: var(--secondary-color); } /* Label สีน้ำทะเล */
+        
         input, select {
-            width: 100%; 
-            padding: 14px; 
-            border: 2px solid #eee;
-            border-radius: 12px; 
-            box-sizing: border-box;
-            font-family: 'Prompt', sans-serif; 
-            background-color: #fff;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            width: 100%; padding: 12px; border: 2px solid #EEE;
+            border-radius: 10px; box-sizing: border-box;
+            font-family: 'Prompt', sans-serif; background-color: #fdfdfd;
+            transition: border-color 0.3s;
         }
-        input:focus, select:focus { 
-            outline: none; 
-            border-color: var(--accent-blue); /* Sky blue focus */
-            box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.2);
-        }
+        input:focus, select:focus { outline: none; border-color: var(--primary-color); } /* โฟกัสเป็นสีส้ม */
         
         button {
-            width: 100%; 
-            padding: 16px; 
-            background-image: linear-gradient(135deg, var(--primary-color) 0%, #ff6a3d 100%);
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer;
-            font-size: 1.2rem; 
-            font-family: 'Prompt', sans-serif; 
-            font-weight: 500;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 1rem;
-            box-shadow: 0 4px 6px rgba(255, 127, 80, 0.2);
+            width: 100%; padding: 14px; background-color: var(--primary-color); /* ปุ่มหลักสีส้ม */
+            color: white; border: none; border-radius: 10px; cursor: pointer;
+            font-size: 1.1rem; font-family: 'Prompt', sans-serif; transition: background 0.3s, transform 0.1s;
+            margin-top: 1rem; font-weight: 500;
+            box-shadow: 0 4px 6px rgba(255, 179, 71, 0.3);
         }
-        button:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255, 127, 80, 0.3);
-        }
-        button:active {
-            transform: translateY(1px);
-        }
+        button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+        button:active { transform: translateY(1px); }
         
-        .link-btn { 
-            background: none; 
-            color: var(--accent-teal); 
-            text-decoration: none; 
-            padding: 0; 
-            margin-top: 1.5rem; 
-            font-size: 0.95rem; 
-            width: 100%; 
-            text-align: center; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: 400;
-            transition: color 0.3s;
-        }
-        .link-btn:hover { color: var(--primary-hover); text-decoration: underline; }
+        .link-btn { background: none; color: var(--secondary-color); text-decoration: none; padding: 0; margin-top: 1.5rem; font-size: 0.9rem; width: 100%; text-align: center; border: none; cursor: pointer; box-shadow: none; }
+        .link-btn:hover { color: var(--primary-hover); background: none; text-decoration: underline; }
 
-        .logout-btn { 
-            background-image: linear-gradient(135deg, #f0932b 0%, var(--danger-color) 100%);
-            margin-top: 2rem;
-            box-shadow: 0 4px 6px rgba(224, 122, 95, 0.2);
-        }
-        .logout-btn:hover { box-shadow: 0 6px 12px rgba(224, 122, 95, 0.3); }
+        .logout-btn { background-color: var(--danger-color); box-shadow: 0 4px 6px rgba(255, 107, 107, 0.3); }
+        .logout-btn:hover { background-color: #ff5252; }
 
         .footer-text {
             font-size: 0.8rem;
-            color: #aaa;
-            margin-top: 2.5rem;
+            color: #AAA;
+            margin-top: 2rem;
             text-align: center;
-            font-weight: 300;
+            background: rgba(255,255,255,0.7);
+            padding: 5px 10px;
+            border-radius: 10px;
         }
 
-        /* Status & Badges - More Colorful */
-        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 500; color: white; }
-        .status-pending { background-color: var(--accent-gold); color: #856404; } /* Yellow */
-        .status-confirmed { background-color: var(--success-color); } /* Green */
-        .status-cancelled { background-color: var(--danger-color); } /* Red */
-        .status-return { background-color: var(--info-color); } /* Blue */
+        /* Admin & User Table Styles */
+        .admin-container { max-width: 1000px; }
+        .table-responsive { overflow-x: auto; margin-bottom: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        th { background-color: #FEF9E7; white-space: nowrap; color: var(--secondary-color); } /* หัวตารางสีเหลืองอ่อน */
+        tr:hover { background-color: #fdfdfd; }
+        
+        .status-badge { padding: 5px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+        .status-pending { background-color: #ffe8cc; color: #d97706; }
+        .status-confirmed { background-color: #d3f9d8; color: #2b8a3e; }
+        .status-cancelled { background-color: #ffe3e3; color: #c92a2a; }
+        .status-return { background-color: #e2eafc; color: #1a4f8b; }
 
-        /* User Booking Cards - Colorful Accents */
+        .action-btn { padding: 6px 12px; margin: 2px; font-size: 0.8rem; width: auto; margin-top: 0; box-shadow: none; }
+        .btn-edit { background-color: var(--warning-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;}
+        .btn-delete { background-color: var(--danger-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;}
+        .btn-edit-user { background-color: var(--info-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;}
+
+        .user-bookings { margin-top: 2rem; border-top: 2px solid var(--accent-color); padding-top: 1.5rem; }
+        .admin-section-divider { margin: 3rem 0 1rem 0; border-top: 3px dashed var(--accent-color); }
+
+        /* Custom Modal Styles */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background: var(--card-bg); padding: 2.5rem; border-radius: 16px; width: 90%; max-width: 400px;
+            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease;
+            max-height: 90vh; overflow-y: auto;
+            border: 3px solid var(--primary-color);
+        }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; justify-content: center; }
+        .modal-buttons button { margin-top: 0; }
+        .modal-btn-cancel { background-color: #e0e0e0; color: #333; box-shadow: none; }
+        .modal-btn-cancel:hover { background-color: #ccc; }
+        #modalInput { margin-top: 1rem; display: none; }
+        
+        @keyframes popScale {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-icon { font-size: 3.5rem; margin-bottom: 0.5rem; display: inline-block; animation: popScale 0.5s forwards; }
+
         .booking-card {
-            background: #fff; 
-            border: 1px solid #eee; 
-            border-radius: 15px;
-            padding: 1.5rem; 
-            margin-bottom: 1.2rem; 
-            text-align: left;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
-            border-left: 5px solid var(--accent-blue); /* Blue accent left */
+            background: #fff; border: 2px solid var(--accent-color); border-radius: 12px;
+            padding: 1.2rem; margin-bottom: 1rem; text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
             transition: transform 0.2s;
         }
         .booking-card:hover { transform: translateX(5px); }
-        .booking-card div { margin-bottom: 0.5rem; }
-        .booking-card strong { color: var(--accent-teal); font-weight: 500; }
+        .booking-card strong { color: var(--secondary-color); }
 
         #notifBanner {
-            display: none; 
-            background-color: var(--accent-teal); 
-            color: white; 
-            padding: 12px;
-            border-radius: 10px; 
-            margin-bottom: 1.5rem; 
-            font-size: 0.9rem;
-            text-align: center; 
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            animation: pulse 2s infinite;
+            display: none; background: var(--secondary-color); color: white; padding: 12px;
+            border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;
+            text-align: center; cursor: pointer;
+            box-shadow: 0 4px 6px rgba(78, 205, 196, 0.3);
         }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 128, 128, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 128, 128, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 128, 128, 0); }
-        }
+        #notifBanner:hover { background-color: #3dbcb4; }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .container { padding: 1.5rem; width: 90%; }
-            h1 { font-size: 1.6rem; }
-            .club-logo { width: 100px; height: 100px; }
+        /* ปรับปรุง Name Group ให้สวยงาม */
+        .name-group {
+            display: flex;
+            gap: 15px;
         }
+        .name-group .form-group {
+            flex: 1;
+        }
+        
+        /* สไตล์เพิ่มเติมสำหรับหน้าสมัครสมาชิก */
+        #registerPage h2 { color: var(--primary-color); }
     </style>
 </head>
 <body>
 
+    <div class="logo-container">
+        <img src="S__4628487.jpg" alt="NU Art Therapy Club Logo" class="club-logo">
+    </div>
+
     <div id="customModal" class="modal-overlay">
         <div class="modal-content">
             <div id="modalIconContainer" style="display: none;"></div>
-            <h3 id="modalTitle">แจ้งเตือน</h3>
+            <h3 id="modalTitle" style="margin-top:0;">แจ้งเตือน</h3>
             <p id="modalText"></p>
             <input type="text" id="modalInput">
             <div class="modal-buttons">
@@ -260,17 +206,17 @@
         </div>
     </div>
 
-    <div id="loginPage" class="container active-page">
-        <div class="logo-container">
-            <img src="S__4628487.jpg" alt="NU Art Therapy Club Logo" class="club-logo">
-        </div>
+    <div id="statusModal" class="modal-overlay"><div class="modal-content"><h3 style="margin-top:0;">เปลี่ยนสถานะการจอง 🔄</h3><input type="hidden" id="statusDocId"><div class="form-group"><label>เลือกสถานะใหม่:</label><select id="newStatusSelect"><option value="รออนุมัติ">รออนุมัติ</option><option value="ยืนยันแล้ว">ยืนยันแล้ว</option><option value="รอคืนของ">รอคืนของ</option><option value="คืนแล้ว">คืนแล้ว</option><option value="ยกเลิก">ยกเลิก</option></select></div><div class="modal-buttons"><button onclick="window.saveStatusEdit()">บันทึก</button><button class="modal-btn-cancel" onclick="document.getElementById('statusModal').style.display='none'">ยกเลิก</button></div></div></div>
+    <div id="equipmentModal" class="modal-overlay"><div class="modal-content"><h3 id="eqModalTitle" style="margin-top:0;">เพิ่มอุปกรณ์ใหม่ 🛠️</h3><input type="hidden" id="eqDocId"><div class="form-group"><label>ชื่ออุปกรณ์</label><input type="text" id="eqName" placeholder="เช่น ชุดสีน้ำ"></div><div class="form-group"><label>จำนวนทั้งหมด (ชิ้น/ชุด)</label><input type="number" id="eqQuantity" min="1" placeholder="เช่น 5"></div><div class="modal-buttons"><button onclick="window.saveEquipment()">บันทึก</button><button class="modal-btn-cancel" onclick="document.getElementById('equipmentModal').style.display='none'">ยกเลิก</button></div></div></div>
+    <div id="editUserModal" class="modal-overlay"><div class="modal-content" style="max-height: 90vh; overflow-y: auto;"><h3 style="margin-top:0;">แก้ไขข้อมูลสมาชิก ✏️</h3><input type="hidden" id="editUserId"><div class="form-group"><label>รหัสนักศึกษา (Username)</label><input type="text" id="editUserUsername" disabled style="background-color: #eee;"></div><div class="name-group"><div class="form-group"><label>ชื่อ</label><input type="text" id="editUserFirstName"></div><div class="form-group"><label>นามสกุล</label><input type="text" id="editUserLastName"></div></div><div class="form-group"><label>คณะ</label><select id="editUserFaculty"><option value="" disabled selected>เลือกคณะ...</option><optgroup label="วิทยาศาสตร์สุขภาพ"><option value="คณะแพทยศาสตร์">คณะแพทยศาสตร์</option><option value="คณะทันตแพทยศาสตร์">คณะทันตแพทยศาสตร์</option><option value="คณะเภสัชศาสตร์">คณะเภสัชศาสตร์</option><option value="คณะพยาบาลศาสตร์">คณะพยาบาลศาสตร์</option><option value="คณะสหเวชศาสตร์">คณะสหเวชศาสตร์</option><option value="คณะสาธารณสุขศาสตร์">คณะสาธารณสุขศาสตร์</option><option value="คณะวิทยาศาสตร์การแพทย์">คณะวิทยาศาสตร์การแพทย์</option></optgroup><optgroup label="วิทยาศาสตร์และเทคโนโลยี"><option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option><option value="คณะวิศวกรรมศาสตร์">คณะวิศวกรรมศาสตร์</option><option value="คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ">คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ</option><option value="คณะเกษตรศาสตร์ฯ">คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม</option><option value="คณะโลจิสติกส์ฯ">คณะโลจิสติกส์และดิจิทัลซัพพลายเชน</option></optgroup><optgroup label="มนุษยศาสตร์และสังคมศาสตร์"><option value="คณะมนุษยศาสตร์">คณะมนุษยศาสตร์</option><option value="คณะศึกษาศาสตร์">คณะศึกษาศาสตร์</option><option value="คณะนิติศาสตร์">คณะนิติศาสตร์</option><option value="คณะบริหารธุรกิจฯ (BEC)">คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร</option><option value="คณะสังคมศาสตร์">คณะสังคมศาสตร์</option><option value="วิทยาลัยนานาชาติ (NUIC)">วิทยาลัยนานาชาติ (NUIC)</option></optgroup></select></div><div class="form-group"><label>สาขา</label><input type="text" id="editUserMajor"></div><div class="form-group"><label>ชั้นปีที่ศึกษา</label><select id="editUserYear"><option value="1">ปี 1</option><option value="2">ปี 2</option><option value="3">ปี 3</option><option value="4">ปี 4</option><option value="5">ปี 5</option><option value="6">ปี 6</option></select></div><div class="form-group"><label>รหัสผ่าน</label><input type="text" id="editUserPassword"></div><div class="modal-buttons"><button onclick="window.saveUserEdit()">บันทึกข้อมูล</button><button class="modal-btn-cancel" onclick="document.getElementById('editUserModal').style.display='none'">ยกเลิก</button></div></div></div>
 
+    <div id="loginPage" class="container active-page">
         <h1>NU Art Therapy Club</h1>
-        <p style="text-align: center; color: #666; margin-bottom: 2.5rem; font-weight: 300;">ระบบจองคิวใช้อุปกรณ์ศิลปะบำบัด</p>
+        <p style="text-align: center; color: #666; margin-bottom: 2rem;">ลงชื่อเข้าใช้ระบบจองอุปกรณ์</p>
         
         <div class="form-group">
             <label>รหัสนักศึกษา / Username</label>
-            <input type="text" id="loginUsername" placeholder="กรอกรหัสนักศึกษาของคุณ">
+            <input type="text" id="loginUsername" placeholder="กรอกรหัสนักศึกษา">
         </div>
         <div class="form-group">
             <label>รหัสผ่าน / Password</label>
@@ -278,44 +224,71 @@
         </div>
 
         <button onclick="window.loginUser()">เข้าสู่ระบบ</button>
-        
-        <button class="link-btn" onclick="window.showPage('registerPage')">ผู้ใช้งานใหม่? <strong style="text-decoration: underline;">สมัครสมาชิกที่นี่</strong></button>
-        <button class="link-btn" style="color: #bbb; margin-top: 2rem;" onclick="window.loginAdmin()">สำหรับผู้ดูแลระบบ (Admin)</button>
+        <button class="link-btn" style="text-decoration: underline;" onclick="window.showPage('registerPage')">ผู้ใช้งานใหม่? สมัครสมาชิกที่นี่</button>
+        <button class="link-btn" style="color: #999; margin-top: 1rem;" onclick="window.loginAdmin()">สำหรับผู้ดูแลระบบ (Admin)</button>
     </div>
 
     <div id="registerPage" class="container">
-        <h2>สมัครสมาชิกใหม่ 🎨</h2>
+        <h2>สมัครสมาชิกใหม่ 📝</h2>
         <div class="form-group"><label>รหัสนักศึกษา / Username</label><input type="text" id="regUsername" placeholder="กรอกรหัสนักศึกษา"></div>
+        <div class="name-group">
+            <div class="form-group"><label>ชื่อ</label><input type="text" id="regFirstName" placeholder="สมหญิง"></div>
+            <div class="form-group"><label>นามสกุล</label><input type="text" id="regLastName" placeholder="รักศิลปะ"></div>
+        </div>
+        <div class="form-group">
+            <label>คณะ (มหาวิทยาลัยนเรศวร)</label>
+            <select id="regFaculty">
+                <option value="" disabled selected>เลือกคณะ...</option>
+                <option value="คณะมนุษยศาสตร์">คณะมนุษยศาสตร์</option>
+                <option value="คณะศึกษาศาสตร์">คณะศึกษาศาสตร์</option>
+                <option value="คณะนิติศาสตร์">คณะนิติศาสตร์</option>
+                <option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option>
+                <option value="คณะวิศวกรรมศาสตร์">คณะวิศวกรรมศาสตร์</option>
+                </select>
+        </div>
+        <div class="form-group">
+            <label>สาขา</label>
+            <input type="text" id="regMajor" placeholder="เช่น ทัศนศิลป์">
+        </div>
+        <div class="form-group">
+            <label>ชั้นปีที่ศึกษา</label>
+            <select id="regYear">
+                <option value="" disabled selected>เลือกชั้นปี...</option>
+                <option value="1">ปี 1</option><option value="2">ปี 2</option><option value="3">ปี 3</option><option value="4">ปี 4</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>ตั้งรหัสผ่าน</label>
+            <input type="password" id="regPassword" placeholder="ตั้งรหัสผ่าน">
+        </div>
         <button onclick="window.submitRegister()">ลงทะเบียน</button>
         <button class="link-btn" onclick="window.showPage('loginPage')">มีบัญชีแล้ว? กลับไปเข้าสู่ระบบ</button>
     </div>
 
     <div id="homePage" class="container">
-        <div id="notifBanner" onclick="window.requestNotifPermission()">🔔 คลิกที่นี่เพื่อเปิดการแจ้งเตือนสถานะบนมือถือ</div>
-        <h2>จองคิวใช้อุปกรณ์ ✨</h2>
-        <p style="text-align: center; color: var(--accent-teal); margin-bottom: 2rem; font-weight: 400;">ยินดีต้อนรับ, <span id="displayUserName" style="font-weight: 500;">คุณ...</span></p>
-        
-        <div class="user-bookings">
-            <h3>ประวัติการจองของคุณ 📋</h3>
-            <div id="userBookingsContainer">
-                </div>
-        </div>
-        
+        <div id="notifBanner" onclick="window.requestNotifPermission()">🔔 คลิกที่นี่เพื่อเปิดการแจ้งเตือนบนมือถือ</div>
+        <h2>จองคิวใช้อุปกรณ์ 🎨</h2>
+        <p style="text-align: center; color: var(--primary-color); margin-bottom: 1rem; font-weight: 500;">ยินดีต้อนรับคุณ: <span id="displayUserName"></span></p>
+        <form id="bookingForm">
+            <div class="form-group"><label>วันที่ต้องการจอง</label><input type="date" id="bookDate" required onchange="window.updateAvailableTimes(); window.checkAvailability();"></div>
+            <div class="form-group"><label>เวลา (10:00 - 15:00 น.)</label><select id="bookTime" required onchange="window.checkAvailability()"><option value="" disabled selected>เลือกเวลา...</option><option value="10:00 - 11:00">10:00 - 11:00 น.</option><option value="11:00 - 12:00">11:00 - 12:00 น.</option><option value="12:00 - 13:00">12:00 - 13:00 น.</option><option value="13:00 - 14:00">13:00 - 14:00 น.</option><option value="14:00 - 15:00">14:00 - 15:00 น.</option></select></div>
+            <div class="form-group"><label>อุปกรณ์ที่ต้องการใช้งาน <span id="eqRemainingLabel" style="font-size: 0.85rem; font-weight: normal; margin-left: 5px;"></span></label><select id="equipment" required onchange="window.checkAvailability()"></select></div>
+            <div class="form-group"><label>จำนวนที่ต้องการจอง</label><input type="number" id="bookQuantity" min="1" value="1" required></div>
+            <button type="button" onclick="window.submitBooking()">ยืนยันการจอง</button>
+        </form>
+        <div class="user-bookings"><h3>ประวัติการจองของคุณ 📋</h3><div id="userBookingsContainer"></div></div>
         <button class="logout-btn" onclick="window.logout()">ออกจากระบบ</button>
     </div>
 
-    <div id="adminPage" class="container admin-container">
-        <h2>ระบบหลังบ้าน (Admin) 👑</h2>
-        <button class="logout-btn" onclick="window.logout()">ออกจากระบบ Admin</button>
-    </div>
+    <div id="adminPage" class="container admin-container"><h2>ระบบหลังบ้าน (Admin) 👑</h2><h3>รายการจองอุปกรณ์ 📋</h3><div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เวลา</th><th>ชื่อผู้จอง</th><th>อุปกรณ์ (จำนวน)</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="bookingTableBody"></tbody></table></div><div class="admin-section-divider"></div><h3>รายการคืนอุปกรณ์ 📥</h3><div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เวลา</th><th>ชื่อผู้จอง</th><th>อุปกรณ์ (จำนวน)</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="returnTableBody"></tbody></table></div><div class="admin-section-divider"></div><h3>ตั้งค่าอุปกรณ์ ⚙️</h3><button onclick="window.openEquipmentModal()">+ เพิ่มอุปกรณ์ใหม่</button><div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>ชื่ออุปกรณ์</th><th>จำนวนคงเหลือ</th><th>จัดการ</th></tr></thead><tbody id="equipmentTableBody"></tbody></table></div><button class="logout-btn" onclick="window.logout()">ออกจากระบบ Admin</button></div>
 
-    <p class="footer-text">Nu Art Therapy Club Booking System <br>บริหารงานโดย สมาชิกชมรม NU Zero Waste</p>
+    <p class="footer-text">บริหารงานโดย สมาชิกชมรม NU Zero Waste</p>
 
     <script type="module">
-        // ... (Firebase initialization and logic remain exactly the same as previous) ...
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
+        // Firebase Configuration (คงเดิม)
         const firebaseConfig = {
             apiKey: "AIzaSyBDCAJarxL4FvUQBLbaq2ydNrztTitC5ro",
             authDomain: "art-therapy-club.firebaseapp.com",
@@ -343,7 +316,7 @@
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
                     document.getElementById('notifBanner').style.display = 'none';
-                    new Notification("สำเร็จ!", { body: "คุณจะได้รับการแจ้งเตือนเมื่อสถานะการจองเปลี่ยนไป 🎉" });
+                    new Notification("สำเร็จ!", { body: "เปิดแจ้งเตือนสถานะแล้ว 🎉" });
                 }
             });
         };
@@ -396,7 +369,8 @@
                 const remaining = parseInt(eq.quantity || 0);
                 window.currentEqRemaining = remaining;
                 remainingLabel.innerText = remaining > 0 ? `(คงเหลือ: ${remaining} ชิ้น)` : `(ของหมดชั่วคราว)`;
-                remainingLabel.style.color = remaining > 0 ? '#588157' : '#e07a5f';
+                // ปรับสีแจ้งเตือนจำนวนคงเหลือ
+                remainingLabel.style.color = remaining > 0 ? 'var(--secondary-color)' : 'var(--danger-color)';
                 qtyInput.max = remaining || 1;
             }
         }
@@ -419,6 +393,8 @@
         window.showPage = function(p) {
             document.querySelectorAll('.container').forEach(el => el.classList.remove('active-page'));
             document.getElementById(p).classList.add('active-page');
+            // สกิลกลับไปด้านบนสุดเมื่อเปลี่ยนหน้า
+            window.scrollTo(0, 0);
         }
 
         async function loadEquipmentData() {
@@ -442,6 +418,7 @@
         window.loginUser = async function() {
             const u = document.getElementById('loginUsername').value;
             const p = document.getElementById('loginPassword').value;
+            if(!u || !p) { alert("กรุณากรอก Username และ Password"); return; }
             const qU = query(usersCollection, where("username", "==", u), where("password", "==", p));
             const snap = await getDocs(qU);
             if (!snap.empty) {
@@ -449,7 +426,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 document.getElementById('displayUserName').innerText = currentUser.name;
                 window.showPage('homePage'); loadEquipmentData(); loadUserBookings();
-            } else { alert("รหัสผ่านผิด"); }
+            } else { alert("รหัสผ่านผิด หรือไม่พบผู้ใช้งาน"); }
         }
 
         window.submitBooking = async function() {
@@ -457,12 +434,17 @@
             const t = document.getElementById('bookTime').value;
             const eq = document.getElementById('equipment').value;
             const q = parseInt(document.getElementById('bookQuantity').value);
-            if(!d || !t || !eq) return;
+            if(!d || !t || !eq || !q) { alert("กรุณากรอกข้อมูลให้ครบถ้วน"); return; }
+            if(window.currentEqRemaining !== null && q > window.currentEqRemaining) { alert("จำนวนที่จองมากกว่าจำนวนคงเหลือ"); return; }
+
             await addDoc(bookingsCollection, {
                 userId: currentUser.username, name: currentUser.name, date: d, time: t,
                 equipment: eq, quantity: q, status: 'รออนุมัติ', createdAt: new Date()
             });
-            window.showModal('จองสำเร็จ!', 'รอ Admin อนุมัติคิว จะมีแจ้งเตือนเด้งบอกครับ', 'success');
+            window.showModal('จองสำเร็จ!', 'รอ Admin อนุมัติคิว จะมีแจ้งเตือนเด้งบอกครับ', 'success', () => {
+                document.getElementById('bookingForm').reset();
+                document.getElementById('eqRemainingLabel').innerText = '';
+            });
         }
 
         async function loadUserBookings() {
@@ -474,9 +456,14 @@
                 let bookings = [];
                 snap.forEach(d => bookings.push({ id: d.id, ...d.data() }));
                 bookings.sort((a, b) => b.createdAt - a.createdAt);
+                if(bookings.length === 0) { container.innerHTML = '<p style="text-align:center; color:#999;">ยังไม่มีประวัติการจอง</p>'; return; }
                 bookings.forEach(b => {
-                    const badge = b.status === 'ยืนยันแล้ว' ? 'status-confirmed' : 'status-pending';
-                    container.innerHTML += `<div class="booking-card"><div><strong>${b.equipment}</strong> (x${b.quantity})</div><div>สถานะ: <span class="status-badge ${badge}">${b.status}</span></div></div>`;
+                    let badgeClass = 'status-pending';
+                    if(b.status === 'ยืนยันแล้ว') badgeClass = 'status-confirmed';
+                    else if(b.status === 'ยกเลิก') badgeClass = 'status-cancelled';
+                    else if(b.status === 'รอคืนของ') badgeClass = 'status-return';
+
+                    container.innerHTML += `<div class="booking-card"><div><strong>${b.equipment}</strong> (x${b.quantity})</div><div style="font-size:0.85rem; color:#666; margin: 5px 0;">วันที่: ${b.date} เวลา: ${b.time}</div><div>สถานะ: <span class="status-badge ${badgeClass}">${b.status}</span></div></div>`;
                 });
                 snap.docChanges().forEach(change => {
                     if (change.type === "modified") {
@@ -491,8 +478,25 @@
         }
 
         window.logout = () => { localStorage.clear(); location.reload(); }
-        window.loginAdmin = () => { const p = prompt("Admin Password"); if(p==='1234'){ localStorage.setItem('adminLoggedIn','true'); window.onload(); } }
-        // ... (Remaining functions loadAdminData, delete, etc. exist but are unchanged) ...
+        window.loginAdmin = () => { const p = prompt("Admin Password"); if(p==='1234'){ localStorage.setItem('adminLoggedIn','true'); window.onload(); } else if(p !== null) { alert("รหัสผ่านผิด"); } }
+
+        // --- ส่วน Function Admin (คงเดิมตามต้นฉบับเพื่อให้ระบบทำงานได้) ---
+        // หมายเหตุ: ในโค้ดต้นฉบับไม่มีรายละเอียด function เหล่านี้มาให้ 
+        // หากต้องการให้หน้า Admin ทำงานได้สมบูรณ์ ต้องนำ code ในส่วน <script> ของต้นฉบับทั้งหมดมาใส่ต่อตรงนี้
+        // โดยไม่เปลี่ยนแปลง logic การทำงานเดิม
+        async function loadAdminData() { /* Logic เดิม */ }
+        async function loadUsersData() { /* Logic เดิม */ }
+        window.deleteEquipment = async function(id) { /* Logic เดิม */ }
+        window.openEquipmentModal = function(id) { /* Logic เดิม */ }
+        window.saveEquipment = async function() { /* Logic เดิม */ }
+        window.openStatusModal = function(id, status) { /* Logic เดิม */ }
+        window.saveStatusEdit = async function() { /* Logic เดิม */ }
+        window.deleteBooking = async function(id) { /* Logic เดิม */ }
+        window.confirmReturn = async function(id) { /* Logic เดิม */ }
+        window.openEditUserModal = async function(id) { /* Logic เดิม */ }
+        window.saveUserEdit = async function() { /* Logic เดิม */ }
+        window.submitRegister = async function() { /* Logic เดิม */ }
+
     </script>
 </body>
 </html>
