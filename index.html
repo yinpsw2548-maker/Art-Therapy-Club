@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NU Art Therapy Club - ระบบจองคิว</title>
+    <title>Art Therapy Club - ระบบจองคิว</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -24,9 +24,8 @@
             margin: 0;
             padding: 2rem 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100vh;
         }
 
@@ -34,12 +33,11 @@
             width: 100%;
             max-width: 500px;
             background: var(--card-bg);
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             display: none;
             margin: 0 auto;
-            position: relative;
         }
 
         .active-page { display: block; animation: fadeIn 0.5s ease; }
@@ -49,44 +47,27 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        .club-logo {
-            width: 120px;
-            height: auto;
-            border-radius: 50%;
-        }
-
         h1, h2, h3 { text-align: center; margin-bottom: 1.5rem; font-weight: 500; }
-        .form-group { margin-bottom: 1.2rem; text-align: left; }
-        label { display: block; margin-bottom: 0.5rem; font-size: 0.95rem; font-weight: 500; }
+        .form-group { margin-bottom: 1rem; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; }
         input, select {
-            width: 100%; padding: 12px; border: 1px solid #ddd;
-            border-radius: 10px; box-sizing: border-box;
+            width: 100%; padding: 10px; border: 1px solid #ddd;
+            border-radius: 8px; box-sizing: border-box;
             font-family: 'Prompt', sans-serif; background-color: #fafafa;
         }
         input:focus, select:focus { outline: none; border-color: var(--primary-color); }
         
         button {
-            width: 100%; padding: 14px; background-color: var(--primary-color);
-            color: white; border: none; border-radius: 10px; cursor: pointer;
-            font-size: 1.1rem; font-family: 'Prompt', sans-serif; transition: background 0.3s;
-            margin-top: 1rem; font-weight: 500;
+            width: 100%; padding: 12px; background-color: var(--primary-color);
+            color: white; border: none; border-radius: 8px; cursor: pointer;
+            font-size: 1rem; font-family: 'Prompt', sans-serif; transition: background 0.3s;
+            margin-top: 1rem;
         }
         button:hover { background-color: var(--primary-hover); }
         
-        .link-btn { background: none; color: var(--primary-hover); text-decoration: none; padding: 0; margin-top: 1.5rem; font-size: 0.9rem; width: 100%; text-align: center; border: none; cursor: pointer; }
+        .link-btn { background: none; color: var(--primary-hover); text-decoration: underline; padding: 0; margin-top: 1rem; font-size: 0.9rem; width: 100%; text-align: center; border: none; cursor: pointer; }
         .logout-btn { background-color: var(--danger-color); }
         .logout-btn:hover { background-color: #c15c42; }
-
-        .footer-text {
-            font-size: 0.75rem;
-            color: #888;
-            margin-top: 2rem;
-            text-align: center;
-        }
 
         /* Admin & User Table Styles */
         .admin-container { max-width: 1000px; }
@@ -95,13 +76,17 @@
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         th { background-color: var(--bg-color); white-space: nowrap; }
         
-        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+        .status-badge {
+            padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+        }
         .status-pending { background-color: #ffe8cc; color: #d97706; }
         .status-confirmed { background-color: #d3f9d8; color: #2b8a3e; }
         .status-cancelled { background-color: #ffe3e3; color: #c92a2a; }
         .status-return { background-color: #e2eafc; color: #1a4f8b; }
 
-        .action-btn { padding: 6px 10px; margin: 2px; font-size: 0.8rem; width: auto; margin-top: 0; }
+        .action-btn {
+            padding: 6px 10px; margin: 2px; font-size: 0.8rem; width: auto; margin-top: 0;
+        }
         .btn-edit { background-color: var(--warning-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;}
         .btn-delete { background-color: var(--danger-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;}
         .btn-edit-user { background-color: var(--info-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;}
@@ -109,7 +94,7 @@
         .user-bookings { margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem; }
         .admin-section-divider { margin: 3rem 0 1rem 0; border-top: 2px dashed #ddd; }
 
-        /* Custom Modal Styles */
+        /* Custom Modal Styles (Popup) แก้ไขให้ตัวเลือกสถานะไม่ล้น */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
@@ -117,7 +102,6 @@
         .modal-content {
             background: var(--card-bg); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px;
             text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease;
-            max-height: 90vh; overflow-y: auto;
         }
         .modal-buttons { display: flex; gap: 10px; margin-top: 1.5rem; justify-content: center; }
         .modal-buttons button { margin-top: 0; }
@@ -125,23 +109,38 @@
         .modal-btn-cancel:hover { background-color: #ccc; }
         #modalInput { margin-top: 1rem; display: none; }
         
+        /* Success Animation */
         @keyframes popScale {
             0% { transform: scale(0.5); opacity: 0; }
             70% { transform: scale(1.15); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .success-icon { font-size: 3.5rem; margin-bottom: 0.5rem; display: inline-block; animation: popScale 0.5s forwards; }
+        .success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            animation: popScale 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
 
+        /* Layout for setting form */
+        .setting-flex { display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 0.5rem; }
+        .setting-flex input { width: 100px; margin: 0; }
+        .setting-flex button { width: auto; margin: 0; padding: 10px 20px; }
+        .name-group { display: flex; gap: 10px; }
+        .name-group .form-group { flex: 1; }
+
+        /* Styles for User Booking Cards */
         .booking-card {
             background: #fafafa; border: 1px solid #eaeaea; border-radius: 12px;
             padding: 1.2rem; margin-bottom: 1rem; text-align: left;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02); position: relative;
         }
-        #notifBanner {
-            display: none; background: #3d5a80; color: white; padding: 10px;
-            border-radius: 8px; margin-bottom: 1rem; font-size: 0.85rem;
-            text-align: center; cursor: pointer;
-        }
+        .booking-card p { margin: 0.4rem 0; font-size: 0.9rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+        .card-buttons { display: flex; gap: 10px; margin-top: 1rem; }
+        .card-buttons button { margin-top: 0; padding: 8px; font-size: 0.85rem; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary-color); color: var(--primary-hover); }
+        .btn-outline:hover { background: var(--primary-color); color: white; }
     </style>
 </head>
 <body>
@@ -159,15 +158,124 @@
         </div>
     </div>
 
-    <div id="statusModal" class="modal-overlay"><div class="modal-content"><h3 style="margin-top:0;">เปลี่ยนสถานะการจอง 🔄</h3><input type="hidden" id="statusDocId"><div class="form-group"><label>เลือกสถานะใหม่:</label><select id="newStatusSelect"><option value="รออนุมัติ">รออนุมัติ</option><option value="ยืนยันแล้ว">ยืนยันแล้ว</option><option value="รอคืนของ">รอคืนของ</option><option value="คืนแล้ว">คืนแล้ว</option><option value="ยกเลิก">ยกเลิก</option></select></div><div class="modal-buttons"><button onclick="window.saveStatusEdit()">บันทึก</button><button class="modal-btn-cancel" onclick="document.getElementById('statusModal').style.display='none'">ยกเลิก</button></div></div></div>
-    <div id="equipmentModal" class="modal-overlay"><div class="modal-content"><h3 id="eqModalTitle" style="margin-top:0;">เพิ่มอุปกรณ์ใหม่ 🛠️</h3><input type="hidden" id="eqDocId"><div class="form-group"><label>ชื่ออุปกรณ์</label><input type="text" id="eqName" placeholder="เช่น ชุดสีน้ำ"></div><div class="form-group"><label>จำนวนทั้งหมด (ชิ้น/ชุด)</label><input type="number" id="eqQuantity" min="1" placeholder="เช่น 5"></div><div class="modal-buttons"><button onclick="window.saveEquipment()">บันทึก</button><button class="modal-btn-cancel" onclick="document.getElementById('equipmentModal').style.display='none'">ยกเลิก</button></div></div></div>
-    <div id="editUserModal" class="modal-overlay"><div class="modal-content" style="max-height: 90vh; overflow-y: auto;"><h3 style="margin-top:0;">แก้ไขข้อมูลสมาชิก ✏️</h3><input type="hidden" id="editUserId"><div class="form-group"><label>รหัสนักศึกษา (Username)</label><input type="text" id="editUserUsername" disabled style="background-color: #eee;"></div><div class="name-group"><div class="form-group"><label>ชื่อ</label><input type="text" id="editUserFirstName"></div><div class="form-group"><label>นามสกุล</label><input type="text" id="editUserLastName"></div></div><div class="form-group"><label>คณะ</label><select id="editUserFaculty"><option value="" disabled selected>เลือกคณะ...</option><optgroup label="วิทยาศาสตร์สุขภาพ"><option value="คณะแพทยศาสตร์">คณะแพทยศาสตร์</option><option value="คณะทันตแพทยศาสตร์">คณะทันตแพทยศาสตร์</option><option value="คณะเภสัชศาสตร์">คณะเภสัชศาสตร์</option><option value="คณะพยาบาลศาสตร์">คณะพยาบาลศาสตร์</option><option value="คณะสหเวชศาสตร์">คณะสหเวชศาสตร์</option><option value="คณะสาธารณสุขศาสตร์">คณะสาธารณสุขศาสตร์</option><option value="คณะวิทยาศาสตร์การแพทย์">คณะวิทยาศาสตร์การแพทย์</option></optgroup><optgroup label="วิทยาศาสตร์และเทคโนโลยี"><option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option><option value="คณะวิศวกรรมศาสตร์">คณะวิศวกรรมศาสตร์</option><option value="คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ">คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ</option><option value="คณะเกษตรศาสตร์ฯ">คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม</option><option value="คณะโลจิสติกส์ฯ">คณะโลจิสติกส์และดิจิทัลซัพพลายเชน</option></optgroup><optgroup label="มนุษยศาสตร์และสังคมศาสตร์"><option value="คณะมนุษยศาสตร์">คณะมนุษยศาสตร์</option><option value="คณะศึกษาศาสตร์">คณะศึกษาศาสตร์</option><option value="คณะนิติศาสตร์">คณะนิติศาสตร์</option><option value="คณะบริหารธุรกิจฯ (BEC)">คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร</option><option value="คณะสังคมศาสตร์">คณะสังคมศาสตร์</option><option value="วิทยาลัยนานาชาติ (NUIC)">วิทยาลัยนานาชาติ (NUIC)</option></optgroup></select></div><div class="form-group"><label>สาขา</label><input type="text" id="editUserMajor"></div><div class="form-group"><label>ชั้นปีที่ศึกษา</label><select id="editUserYear"><option value="1">ปี 1</option><option value="2">ปี 2</option><option value="3">ปี 3</option><option value="4">ปี 4</option><option value="5">ปี 5</option><option value="6">ปี 6</option></select></div><div class="form-group"><label>รหัสผ่าน</label><input type="text" id="editUserPassword"></div><div class="modal-buttons"><button onclick="window.saveUserEdit()">บันทึกข้อมูล</button><button class="modal-btn-cancel" onclick="document.getElementById('editUserModal').style.display='none'">ยกเลิก</button></div></div></div>
+    <div id="statusModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-top:0;">เปลี่ยนสถานะการจอง 🔄</h3>
+            <input type="hidden" id="statusDocId">
+            <div class="form-group">
+                <label>เลือกสถานะใหม่:</label>
+                <select id="newStatusSelect">
+                    <option value="รออนุมัติ">รออนุมัติ</option>
+                    <option value="ยืนยันแล้ว">ยืนยันแล้ว</option>
+                    <option value="รอคืนของ">รอคืนของ</option>
+                    <option value="คืนแล้ว">คืนแล้ว</option>
+                    <option value="ยกเลิก">ยกเลิก</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button onclick="window.saveStatusEdit()">บันทึก</button>
+                <button class="modal-btn-cancel" onclick="document.getElementById('statusModal').style.display='none'">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="equipmentModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="eqModalTitle" style="margin-top:0;">เพิ่มอุปกรณ์ใหม่ 🛠️</h3>
+            <input type="hidden" id="eqDocId">
+            <div class="form-group">
+                <label>ชื่ออุปกรณ์</label>
+                <input type="text" id="eqName" placeholder="เช่น ชุดสีน้ำ">
+            </div>
+            <div class="form-group">
+                <label>จำนวนทั้งหมด (ชิ้น/ชุด)</label>
+                <input type="number" id="eqQuantity" min="1" placeholder="เช่น 5">
+            </div>
+            <div class="modal-buttons">
+                <button onclick="window.saveEquipment()">บันทึก</button>
+                <button class="modal-btn-cancel" onclick="document.getElementById('equipmentModal').style.display='none'">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editUserModal" class="modal-overlay">
+        <div class="modal-content" style="max-height: 90vh; overflow-y: auto;">
+            <h3 style="margin-top:0;">แก้ไขข้อมูลสมาชิก ✏️</h3>
+            <input type="hidden" id="editUserId">
+            <div class="form-group">
+                <label>รหัสนักศึกษา (Username)</label>
+                <input type="text" id="editUserUsername" disabled style="background-color: #eee;">
+            </div>
+            
+            <div class="name-group">
+                <div class="form-group">
+                    <label>ชื่อ</label>
+                    <input type="text" id="editUserFirstName">
+                </div>
+                <div class="form-group">
+                    <label>นามสกุล</label>
+                    <input type="text" id="editUserLastName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>คณะ</label>
+                <select id="editUserFaculty">
+                    <option value="" disabled selected>เลือกคณะ...</option>
+                    <optgroup label="วิทยาศาสตร์สุขภาพ">
+                        <option value="คณะแพทยศาสตร์">คณะแพทยศาสตร์</option>
+                        <option value="คณะทันตแพทยศาสตร์">คณะทันตแพทยศาสตร์</option>
+                        <option value="คณะเภสัชศาสตร์">คณะเภสัชศาสตร์</option>
+                        <option value="คณะพยาบาลศาสตร์">คณะพยาบาลศาสตร์</option>
+                        <option value="คณะสหเวชศาสตร์">คณะสหเวชศาสตร์</option>
+                        <option value="คณะสาธารณสุขศาสตร์">คณะสาธารณสุขศาสตร์</option>
+                        <option value="คณะวิทยาศาสตร์การแพทย์">คณะวิทยาศาสตร์การแพทย์</option>
+                    </optgroup>
+                    <optgroup label="วิทยาศาสตร์และเทคโนโลยี">
+                        <option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option>
+                        <option value="คณะวิศวกรรมศาสตร์">คณะวิศวกรรมศาสตร์</option>
+                        <option value="คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ">คณะสถาปัตยกรรมศาสตร์ ศิลปะและการออกแบบ</option>
+                        <option value="คณะเกษตรศาสตร์ฯ">คณะเกษตรศาสตร์ ทรัพยากรธรรมชาติและสิ่งแวดล้อม</option>
+                        <option value="คณะโลจิสติกส์ฯ">คณะโลจิสติกส์และดิจิทัลซัพพลายเชน</option>
+                    </optgroup>
+                    <optgroup label="มนุษยศาสตร์และสังคมศาสตร์">
+                        <option value="คณะมนุษยศาสตร์">คณะมนุษยศาสตร์</option>
+                        <option value="คณะศึกษาศาสตร์">คณะศึกษาศาสตร์</option>
+                        <option value="คณะนิติศาสตร์">คณะนิติศาสตร์</option>
+                        <option value="คณะบริหารธุรกิจฯ (BEC)">คณะบริหารธุรกิจ เศรษฐศาสตร์และการสื่อสาร</option>
+                        <option value="คณะสังคมศาสตร์">คณะสังคมศาสตร์</option>
+                        <option value="วิทยาลัยนานาชาติ (NUIC)">วิทยาลัยนานาชาติ (NUIC)</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>สาขา</label>
+                <input type="text" id="editUserMajor">
+            </div>
+            <div class="form-group">
+                <label>ชั้นปีที่ศึกษา</label>
+                <select id="editUserYear">
+                    <option value="1">ปี 1</option>
+                    <option value="2">ปี 2</option>
+                    <option value="3">ปี 3</option>
+                    <option value="4">ปี 4</option>
+                    <option value="5">ปี 5</option>
+                    <option value="6">ปี 6</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>รหัสผ่าน</label>
+                <input type="text" id="editUserPassword">
+            </div>
+            <div class="modal-buttons">
+                <button onclick="window.saveUserEdit()">บันทึกข้อมูล</button>
+                <button class="modal-btn-cancel" onclick="document.getElementById('editUserModal').style.display='none'">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
 
     <div id="loginPage" class="container active-page">
-        <div class="logo-container">
-            <img src="S__4628487.jpg" alt="Logo" class="club-logo">
-        </div>
-        <h1>NU Art Therapy Club</h1>
+        <h1>Art Therapy Club</h1>
         <p style="text-align: center; color: #666; margin-bottom: 2rem;">ลงชื่อเข้าใช้ระบบจองอุปกรณ์</p>
         
         <div class="form-group">
@@ -175,253 +283,39 @@
             <input type="text" id="loginUsername" placeholder="กรอกรหัสนักศึกษา">
         </div>
         <div class="form-group">
-            <label>รหัสผ่าน / Password</label>
+            <label>รหัสผ่าน</label>
             <input type="password" id="loginPassword" placeholder="กรอกรหัสผ่าน">
         </div>
 
         <button onclick="window.loginUser()">เข้าสู่ระบบ</button>
-        <button class="link-btn" style="color: var(--primary-hover); text-decoration: underline;" onclick="window.showPage('registerPage')">ผู้ใช้งานใหม่? สมัครสมาชิกที่นี่</button>
-        <button class="link-btn" style="color: #999;" onclick="window.loginAdmin()">สำหรับผู้ดูแลระบบ (Admin)</button>
+        <button class="link-btn" onclick="window.showPage('registerPage')">ผู้ใช้งานใหม่? สมัครสมาชิกที่นี่</button>
+        <button class="link-btn" onclick="window.loginAdmin()" style="margin-top: 2rem; color: #999;">สำหรับผู้ดูแลระบบ (Admin)</button>
     </div>
 
     <div id="registerPage" class="container">
         <h2>สมัครสมาชิกใหม่ 📝</h2>
-        <div class="form-group"><label>รหัสนักศึกษา / Username</label><input type="text" id="regUsername" placeholder="กรอกรหัสนักศึกษา"></div>
-        <div class="name-group">
-            <div class="form-group"><label>ชื่อ</label><input type="text" id="regFirstName" placeholder="สมหญิง"></div>
-            <div class="form-group"><label>นามสกุล</label><input type="text" id="regLastName" placeholder="รักศิลปะ"></div>
+        <div class="form-group">
+            <label>รหัสนักศึกษา / Username (ใช้สำหรับเข้าระบบ)</label>
+            <input type="text" id="regUsername" placeholder="กรอกรหัสนักศึกษา">
         </div>
+        
+        <div class="name-group">
+            <div class="form-group">
+                <label>ชื่อ</label>
+                <input type="text" id="regFirstName" placeholder="เช่น สมหญิง">
+            </div>
+            <div class="form-group">
+                <label>นามสกุล</label>
+                <input type="text" id="regLastName" placeholder="เช่น รักศิลปะ">
+            </div>
+        </div>
+
         <div class="form-group">
             <label>คณะ (มหาวิทยาลัยนเรศวร)</label>
             <select id="regFaculty">
                 <option value="" disabled selected>เลือกคณะ...</option>
-                <option value="คณะมนุษยศาสตร์">คณะมนุษยศาสตร์</option>
-                <option value="คณะศึกษาศาสตร์">คณะศึกษาศาสตร์</option>
-                <option value="คณะนิติศาสตร์">คณะนิติศาสตร์</option>
-                <option value="คณะวิทยาศาสตร์">คณะวิทยาศาสตร์</option>
-                <option value="คณะวิศวกรรมศาสตร์">คณะวิศวกรรมศาสตร์</option>
-                </select>
-        </div>
-        <div class="form-group">
-            <label>สาขา</label>
-            <input type="text" id="regMajor" placeholder="เช่น ทัศนศิลป์">
-        </div>
-        <div class="form-group">
-            <label>ชั้นปีที่ศึกษา</label>
-            <select id="regYear">
-                <option value="" disabled selected>เลือกชั้นปี...</option>
-                <option value="1">ปี 1</option><option value="2">ปี 2</option><option value="3">ปี 3</option><option value="4">ปี 4</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>ตั้งรหัสผ่าน</label>
-            <input type="password" id="regPassword" placeholder="ตั้งรหัสผ่าน">
-        </div>
-        <button onclick="window.submitRegister()">ลงทะเบียน</button>
-        <button class="link-btn" onclick="window.showPage('loginPage')">มีบัญชีแล้ว? กลับไปเข้าสู่ระบบ</button>
-    </div>
-
-    <div id="homePage" class="container">
-        <div id="notifBanner" onclick="window.requestNotifPermission()">🔔 คลิกที่นี่เพื่อเปิดการแจ้งเตือนบนมือถือ</div>
-        <h2>จองคิวใช้อุปกรณ์ 🎨</h2>
-        <p style="text-align: center; color: #588157; margin-bottom: 1rem;">ยินดีต้อนรับคุณ: <span id="displayUserName"></span></p>
-        <form id="bookingForm">
-            <div class="form-group"><label>วันที่ต้องการจอง</label><input type="date" id="bookDate" required onchange="window.updateAvailableTimes(); window.checkAvailability();"></div>
-            <div class="form-group"><label>เวลา (10:00 - 15:00 น.)</label><select id="bookTime" required onchange="window.checkAvailability()"><option value="" disabled selected>เลือกเวลา...</option><option value="10:00 - 11:00">10:00 - 11:00 น.</option><option value="11:00 - 12:00">11:00 - 12:00 น.</option><option value="12:00 - 13:00">12:00 - 13:00 น.</option><option value="13:00 - 14:00">13:00 - 14:00 น.</option><option value="14:00 - 15:00">14:00 - 15:00 น.</option></select></div>
-            <div class="form-group"><label>อุปกรณ์ที่ต้องการใช้งาน <span id="eqRemainingLabel" style="font-size: 0.85rem; font-weight: normal; margin-left: 5px;"></span></label><select id="equipment" required onchange="window.checkAvailability()"></select></div>
-            <div class="form-group"><label>จำนวนที่ต้องการจอง</label><input type="number" id="bookQuantity" min="1" value="1" required></div>
-            <button type="button" onclick="window.submitBooking()">ยืนยันการจอง</button>
-        </form>
-        <div class="user-bookings"><h3>ประวัติการจองของคุณ 📋</h3><div id="userBookingsContainer"></div></div>
-        <button class="logout-btn" onclick="window.logout()">ออกจากระบบ</button>
-    </div>
-
-    <div id="adminPage" class="container admin-container"><h2>ระบบหลังบ้าน (Admin) 👑</h2><h3>รายการจองอุปกรณ์ 📋</h3><div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เวลา</th><th>ชื่อผู้จอง</th><th>อุปกรณ์ (จำนวน)</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="bookingTableBody"></tbody></table></div><div class="admin-section-divider"></div><h3>รายการคืนอุปกรณ์ 📥</h3><div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>วันที่</th><th>เวลา</th><th>ชื่อผู้จอง</th><th>อุปกรณ์ (จำนวน)</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="returnTableBody"></tbody></table></div><div class="admin-section-divider"></div><h3>ตั้งค่าอุปกรณ์ ⚙️</h3><button onclick="window.openEquipmentModal()">+ เพิ่มอุปกรณ์ใหม่</button><div class="table-responsive"><table><thead><tr><th>ลำดับ</th><th>ชื่ออุปกรณ์</th><th>จำนวนคงเหลือ</th><th>จัดการ</th></tr></thead><tbody id="equipmentTableBody"></tbody></table></div><button class="logout-btn" onclick="window.logout()">ออกจากระบบ Admin</button></div>
-
-    <p class="footer-text">บริหารงานโดย สมาชิกชมรม NU Zero Waste</p>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBDCAJarxL4FvUQBLbaq2ydNrztTitC5ro",
-            authDomain: "art-therapy-club.firebaseapp.com",
-            projectId: "art-therapy-club",
-            storageBucket: "art-therapy-club.firebasestorage.app",
-            messagingSenderId: "561070825612",
-            appId: "1:561070825612:web:fdf1604520fff05b77dba9"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const bookingsCollection = collection(db, "bookings");
-        const usersCollection = collection(db, "users"); 
-        const equipmentCollection = collection(db, "equipment");
-        const settingsDocRef = doc(db, "settings", "general");
-
-        let currentUser = null; 
-        window.equipmentList = []; 
-        window.currentEqRemaining = null; 
-        let unsubscribeBookings = null;
-
-        // --- Notification Logic ---
-        window.requestNotifPermission = function() {
-            if (!("Notification" in window)) { alert("เบราว์เซอร์นี้ไม่รองรับการแจ้งเตือน"); return; }
-            Notification.requestPermission().then(permission => {
-                if (permission === "granted") {
-                    document.getElementById('notifBanner').style.display = 'none';
-                    new Notification("สำเร็จ!", { body: "เปิดแจ้งเตือนสถานะแล้ว 🎉" });
-                }
-            });
-        };
-
-        function showBrowserNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body: body });
-            }
-        }
-
-        window.onload = async function() {
-            const savedUser = localStorage.getItem('currentUser');
-            const savedAdmin = localStorage.getItem('adminLoggedIn');
-            if (savedAdmin === 'true') {
-                window.showPage('adminPage'); loadAdminData(); loadUsersData(); loadEquipmentData();
-            } else if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                document.getElementById('displayUserName').innerText = currentUser.name;
-                if ("Notification" in window && Notification.permission === "default") document.getElementById('notifBanner').style.display = 'block';
-                window.showPage('homePage'); await loadEquipmentData(); loadUserBookings(); 
-            }
-        };
-
-        const bookDateInput = document.getElementById("bookDate");
-        const bookTimeSelect = document.getElementById("bookTime");
-        const nowLocal = new Date();
-        const localToday = nowLocal.getFullYear() + '-' + String(nowLocal.getMonth() + 1).padStart(2, '0') + '-' + String(nowLocal.getDate()).padStart(2, '0');
-        if(bookDateInput) bookDateInput.setAttribute('min', localToday);
-
-        window.updateAvailableTimes = function() {
-            if (!bookDateInput.value) return;
-            const selectedDate = bookDateInput.value;
-            const now = new Date();
-            const todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
-            const currentHour = now.getHours();
-            for (let i = 1; i < bookTimeSelect.options.length; i++) {
-                const option = bookTimeSelect.options[i];
-                const startHour = parseInt(option.value.split(':')[0]); 
-                option.disabled = (selectedDate === todayStr && currentHour >= startHour);
-            }
-        }
-
-        window.checkAvailability = function() {
-            const eqName = document.getElementById('equipment').value;
-            const remainingLabel = document.getElementById('eqRemainingLabel');
-            const qtyInput = document.getElementById('bookQuantity');
-            if (!eqName) { remainingLabel.innerText = ''; return; }
-            const eq = window.equipmentList.find(e => e.name === eqName);
-            if(eq) {
-                const remaining = parseInt(eq.quantity || 0);
-                window.currentEqRemaining = remaining;
-                remainingLabel.innerText = remaining > 0 ? `(คงเหลือ: ${remaining} ชิ้น)` : `(ของหมดชั่วคราว)`;
-                remainingLabel.style.color = remaining > 0 ? '#588157' : '#e07a5f';
-                qtyInput.max = remaining || 1;
-            }
-        }
-
-        window.showModal = function(title, text, type = 'alert', callback = null) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalText').innerText = text;
-            const ic = document.getElementById('modalIconContainer');
-            ic.style.display = (type === 'success') ? 'block' : 'none';
-            ic.innerHTML = (type === 'success') ? '<span class="success-icon">✅</span>' : '';
-            document.getElementById('customModal').style.display = 'flex';
-            window.modalCallback = callback;
-        };
-
-        window.closeModal = function() {
-            document.getElementById('customModal').style.display = 'none';
-            if (window.modalCallback) window.modalCallback();
-        };
-
-        window.showPage = function(p) {
-            document.querySelectorAll('.container').forEach(el => el.classList.remove('active-page'));
-            document.getElementById(p).classList.add('active-page');
-        }
-
-        async function loadEquipmentData() {
-            try {
-                const qSnap = await getDocs(equipmentCollection);
-                const eqSelect = document.getElementById('equipment');
-                const adminEqTable = document.getElementById('equipmentTableBody');
-                eqSelect.innerHTML = '<option value="" disabled selected>เลือกอุปกรณ์...</option>';
-                adminEqTable.innerHTML = '';
-                window.equipmentList = [];
-                let idx = 1;
-                qSnap.forEach(docSnap => {
-                    const data = docSnap.data();
-                    window.equipmentList.push({ id: docSnap.id, ...data });
-                    eqSelect.innerHTML += `<option value="${data.name}">${data.name}</option>`;
-                    adminEqTable.innerHTML += `<tr><td>${idx++}</td><td>${data.name}</td><td>${data.quantity}</td><td><button class="action-btn btn-delete" onclick="window.deleteEquipment('${docSnap.id}')">ลบ</button></td></tr>`;
-                });
-            } catch (e) { console.error(e); }
-        }
-
-        window.loginUser = async function() {
-            const u = document.getElementById('loginUsername').value;
-            const p = document.getElementById('loginPassword').value;
-            const qU = query(usersCollection, where("username", "==", u), where("password", "==", p));
-            const snap = await getDocs(qU);
-            if (!snap.empty) {
-                snap.forEach(d => currentUser = { id: d.id, ...d.data() });
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                document.getElementById('displayUserName').innerText = currentUser.name;
-                window.showPage('homePage'); loadEquipmentData(); loadUserBookings();
-            } else { alert("รหัสผ่านผิด"); }
-        }
-
-        window.submitBooking = async function() {
-            const d = document.getElementById('bookDate').value;
-            const t = document.getElementById('bookTime').value;
-            const eq = document.getElementById('equipment').value;
-            const q = parseInt(document.getElementById('bookQuantity').value);
-            if(!d || !t || !eq) return;
-            await addDoc(bookingsCollection, {
-                userId: currentUser.username, name: currentUser.name, date: d, time: t,
-                equipment: eq, quantity: q, status: 'รออนุมัติ', createdAt: new Date()
-            });
-            window.showModal('จองสำเร็จ!', 'รอ Admin อนุมัติคิว จะมีแจ้งเตือนเด้งบอกครับ', 'success');
-        }
-
-        async function loadUserBookings() {
-            const container = document.getElementById('userBookingsContainer');
-            if (unsubscribeBookings) unsubscribeBookings();
-            const q = query(bookingsCollection, where("userId", "==", currentUser.username));
-            unsubscribeBookings = onSnapshot(q, (snap) => {
-                container.innerHTML = '';
-                let bookings = [];
-                snap.forEach(d => bookings.push({ id: d.id, ...d.data() }));
-                bookings.sort((a, b) => b.createdAt - a.createdAt);
-                bookings.forEach(b => {
-                    const badge = b.status === 'ยืนยันแล้ว' ? 'status-confirmed' : 'status-pending';
-                    container.innerHTML += `<div class="booking-card"><div><strong>${b.equipment}</strong> (x${b.quantity})</div><div>สถานะ: <span class="status-badge ${badge}">${b.status}</span></div></div>`;
-                });
-                snap.docChanges().forEach(change => {
-                    if (change.type === "modified") {
-                        const data = change.doc.data();
-                        if (data.status === 'ยืนยันแล้ว') {
-                            showBrowserNotification('คิวได้รับการยืนยัน! ✅', `รายการ ${data.equipment} ได้รับการอนุมัติแล้ว`);
-                            window.showModal('ยืนยันแล้ว!', `รายการ ${data.equipment} ได้รับการอนุมัติแล้ว`, 'success');
-                        }
-                    }
-                });
-            });
-        }
-
-        window.logout = () => { localStorage.clear(); location.reload(); }
-        window.loginAdmin = () => { const p = prompt("Admin Password"); if(p==='1234'){ localStorage.setItem('adminLoggedIn','true'); window.onload(); } }
-
-        // ฟังก์ชันอื่นๆ (loadAdminData, delete, ฯลฯ) คงไว้ตามต้นฉบับ
-    </script>
-</body>
-</html>
+                <optgroup label="วิทยาศาสตร์สุขภาพ">
+                    <option value="คณะแพทยศาสตร์">คณะแพทยศาสตร์</option>
+                    <option value="คณะทันตแพทยศาสตร์">คณะทันตแพทยศาสตร์</option>
+                    <option value="คณะเภสัชศาสตร์">คณะเภสัชศาสตร์</option>
+                    <option value="คณะพ
